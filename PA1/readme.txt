@@ -2,7 +2,7 @@
 2. 姓名：
 3. 使用之程式語言：C++
 4. 使用之編譯平台：Linux GNU g++
-5. 檔案壓縮方式: tar zcvf b11032055-p1.tgz b11032055-p1
+5. 檔案壓縮方式: 
 6. 各檔案說明：
 	main.cpp		        : 主程式
    	AnalysisAndVisualization.h 	: header file
