@@ -16,8 +16,8 @@ class DataPreprocess
     public:
         DataPreprocess();
         DataPreprocess(string inputFile);
-        void parseData(vector<vector<int>> &macro,int &boundary_w, int &boundary_h,int &macro_num);
-        void display(vector<vector<int>> &macro,int &macro_num);
+        void parseData(vector<vector<int>> &macro, vector<string> &macro_label, int &boundary_w, int &boundary_h,int &macro_num);
+        void display(vector<vector<int>> &macro, vector<string> &macro_label, int &macro_num);
 };
 
 #endif

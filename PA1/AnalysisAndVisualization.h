@@ -15,6 +15,7 @@ class AnalysisAndVisualization
 {
     private:
         vector<vector<int>> macro;
+        vector<string> macro_label;
         int boundary_w, boundary_h;
         int macro_num;
         

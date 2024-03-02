@@ -11,7 +11,7 @@ DataPreprocess :: DataPreprocess(string inputFile)
     fileName = inputFile;
 };
 
-void DataPreprocess :: parseData(vector<vector<int>> &macro,int &boundary_w, int &boundary_h,int &macro_num)
+void DataPreprocess :: parseData(vector<vector<int>> &macro, vector<string> &macro_label, int &boundary_w, int &boundary_h,int &macro_num)
 {
     ifstream input(fileName);
     stringstream ss;
@@ -19,9 +19,7 @@ void DataPreprocess :: parseData(vector<vector<int>> &macro,int &boundary_w, int
     string str;
     string firstPart;
     string boundary;
-    string m_blank;
     int x1, y1, x2, y2;
-    int Mlabel;
 
     //checl input
     if (!input.is_open()) {
@@ -40,7 +38,6 @@ void DataPreprocess :: parseData(vector<vector<int>> &macro,int &boundary_w, int
         ss << str;
         slabel << str[1];
         ss >> firstPart;
-        slabel >> Mlabel;
 
         if(firstPart == "Boundary")
         {
@@ -52,18 +49,19 @@ void DataPreprocess :: parseData(vector<vector<int>> &macro,int &boundary_w, int
             ss >> macro_num;
             cout << macro_num << endl;
         }
-        else if(str[0] == 'M')
+        else
         {
             ss >> x1 >> y1 >> x2 >> y2;
-            macro.push_back({Mlabel, x1, y1, x2, y2});
+            macro.push_back({x1, y1, x2, y2});
+            macro_label.push_back({firstPart});
         } 
     }
 };
 
-void DataPreprocess :: display(vector<vector<int>> &macro, int &macro_num)
+void DataPreprocess :: display(vector<vector<int>> &macro, vector<string> &macro_label, int &macro_num)
 {
     for(int i = 0; i < macro_num; i++)
     {
-        cout << "M" << macro[i][0] << ": " << macro[i][1] << " " << macro[i][2] << " " << macro[i][3] << " " << macro[i][4] << endl;
+        cout << macro_label[i] << ": " << macro[i][0] << " " << macro[i][1] << " " << macro[i][2] << " " << macro[i][3] << endl;
     }
 }
