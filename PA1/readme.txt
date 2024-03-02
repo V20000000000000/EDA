@@ -22,7 +22,6 @@
 	
 8. 執行、使用方式說明：
     主程式：
-   	   
    	   執行檔的命令格式為 :
    	   ./main.exe input.txt output.gp
 
