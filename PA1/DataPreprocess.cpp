@@ -42,12 +42,12 @@ void DataPreprocess :: parseData(vector<vector<int>> &macro, vector<string> &mac
         if(firstPart == "Boundary")
         {
             ss >> boundary_w >> boundary_h;
-            cout << boundary_w << " " << boundary_h << endl;
+            cout << "boundary: " << boundary_w << " " << boundary_h << endl;
         }
         else if(firstPart == "Macro")
         {
             ss >> macro_num;
-            cout << macro_num << endl;
+            cout << "macro_num: " << macro_num << endl;
         }
         else
         {
