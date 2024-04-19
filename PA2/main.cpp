@@ -28,6 +28,10 @@ int main(int argc, char **argv)
     parser.getMaxAspectRatio();
     parser.getBlocksList();
 
+    parser.getBlock(34);
+    parser.getBlockWidth(34);
+    parser.getBlockHeight(34);
+
     ofstream outputFile(arg2);
 
     outputFile.close();
