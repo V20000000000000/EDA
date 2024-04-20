@@ -164,6 +164,34 @@ public:
         setVertexProperty(vertex.getId(), property);
     }
 
+    std::set<int> getOutNeighbors(int vertex) const {
+        std::set<int> neighbors;
+        for (const auto& neighbor : adjacencyList[vertex]) {
+            neighbors.insert(neighbor.first);
+        }
+        return neighbors;
+    }
+
+    std::set<int> getOutNeighbors(const Vertex& vertex) const {
+        return getOutNeighbors(vertex.getId());
+    }
+
+    std::set<int> getInNeighbors(int vertex) const {
+        std::set<int> neighbors;
+        for (int i = 0; i < adjacencyList.size(); ++i) {
+            auto it = adjacencyList[i].find(vertex);
+            if (it != adjacencyList[i].end()) {
+                neighbors.insert(i);
+            }
+        }
+        return neighbors;
+    }
+
+    std::set<int> getInNeighbors(const Vertex& vertex) const {
+        return getInNeighbors(vertex.getId());
+    }
+
+
     std::map<int, std::map<float, EdgeProperty<U>>> getOutEdges(int vertex) const {
         std::set<int> s;
         for (const auto& neighbor : adjacencyList[vertex]) {
