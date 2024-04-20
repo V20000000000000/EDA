@@ -16,7 +16,7 @@ class InputDataParse
         int numBlocks;
         float minAspectRatio;
         float maxAspectRatio;
-        vector<map<string, vector<int>>> blocksList;
+        vector<map<string, vector<int>>> blocksList; // Store block dimensions
 
         InputDataParse(string inputFileName)    // Constructor
         {
@@ -74,23 +74,25 @@ class InputDataParse
         };
         ~InputDataParse(){}; // Destructor
 
-        void getNumBlocks()
+        int getNumBlocks()
         {
-            cout << "Number of blocks: " << numBlocks << endl;
+           return numBlocks;
         };
 
-        void getMinAspectRatio()
+        float getMinAspectRatio()
         {
-            cout << "Minimum aspect ratio: " << minAspectRatio << endl;
+            return minAspectRatio;
         };
 
-        void getMaxAspectRatio()
+        float getMaxAspectRatio()
         {
-            cout << "Maximum aspect ratio: " << maxAspectRatio << endl;
+            return maxAspectRatio;
         };
 
-        void getBlocksList() 
+        vector<map<string, vector<int>>> getBlocksList() 
         {
+            return blocksList;
+            /*
             for (const auto& block : blocksList) 
             {
                 for (const auto& pair : block) 
@@ -98,10 +100,13 @@ class InputDataParse
                     cout << pair.first << " " << pair.second[0] << " " << pair.second[1] << std::endl;
                 }
             }
+            */
         }
 
-        void getBlock(int index)
+        map<string, vector<int>> getBlock(int index)
         {
+            return blocksList[index];
+            /*
                 for (const auto& pair : blocksList[index]) 
                 {
                     if (pair.first == "block_" + to_string(index))
@@ -109,28 +114,36 @@ class InputDataParse
                         cout << pair.first << " " << pair.second[0] << " " << pair.second[1] << endl;
                     }
                 }
+            */
         }
 
-        void getBlockWidth(int index)
+        int getBlockWidth(int index)
         {
-            for (const auto& pair : blocksList[index]) 
+            return blocksList[index]["block_" + to_string(index)][0];
+            /*
+                for (const auto& pair : blocksList[index]) 
                 {
                     if (pair.first == "block_" + to_string(index))
                     {
                         cout << pair.first << " width: " << pair.second[0] << endl;
                     }
                 }
+            */
+            
         }
 
-        void getBlockHeight(int index)
+        int getBlockHeight(int index)
         {
-            for (const auto& pair : blocksList[index]) 
+            return blocksList[index]["block_" + to_string(index)][1];
+            /*
+                for (const auto& pair : blocksList[index]) 
                 {
                     if (pair.first == "block_" + to_string(index))
                     {
                         cout << pair.first << " height: " << pair.second[1] << endl;
                     }
                 }
+            */
         }
 };
 

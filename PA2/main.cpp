@@ -2,7 +2,12 @@
 #include <cassert>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <map>
+#include <set>
 #include "InputDataParse.hpp"
+#include "HorizontalGraph.hpp"
+#include "InitialSolution.hpp"
 
 using namespace std;
 
@@ -21,21 +26,15 @@ int main(int argc, char **argv)
 
     inputFile.close();
 
-    InputDataParse parser(arg1);
-
-    parser.getNumBlocks();
-    parser.getMinAspectRatio();
-    parser.getMaxAspectRatio();
-    parser.getBlocksList();
-
-    parser.getBlock(34);
-    parser.getBlockWidth(34);
-    parser.getBlockHeight(34);
+    InitialSolution initialSolution(arg1);
 
     ofstream outputFile(arg2);
 
     outputFile.close();
 
-    cout << "Complete!" << endl;
+    cout << "Complete1!" << endl;
+
+    
+
     return 0;
 }

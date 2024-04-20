@@ -1,0 +1,73 @@
+graph.addDirectedEdge(0, 1, 0.5);
+    graph.addDirectedEdge(1, 2, 0.6);
+    graph.addDirectedEdge(2, 3, 0.7);
+    graph.addDirectedEdge(3, 4, 0.8);
+    graph.addBidirectedEdge(0, 4, 0.9, 0.7);
+    
+    graph.setEdgeProperty(0, 1, 1);
+    graph.setEdgeProperty(1, 2, 2);
+    graph.setEdgeProperty(2, 3, 1.2);
+    graph.setEdgeProperty(3, 4, 1.3);
+
+    graph.setVertexProperty(0, 10);
+    graph.setVertexProperty(1, 20);
+    graph.setVertexProperty(2, 30);
+    graph.setVertexProperty(3, 40);
+    
+
+    cout << "Edge property (0, 1): " << graph.getEdgeProperty(0, 1).value << endl;
+    cout << "Edge property (1, 2): " << graph.getEdgeProperty(1, 2).value << endl;
+    cout << "Edge property (2, 3): " << graph.getEdgeProperty(2, 3).value << endl;
+    cout << "Edge property (3, 4): " << graph.getEdgeProperty(3, 4).value << endl;
+
+    cout << "Edge weight (0, 1): " << graph.getEdgeWeight(0, 1) << endl;
+    cout << "Edge weight (1, 2): " << graph.getEdgeWeight(1, 2) << endl;
+    cout << "Edge weight (2, 3): " << graph.getEdgeWeight(2, 3) << endl;
+    cout << "Edge weight (3, 4): " << graph.getEdgeWeight(3, 4) << endl;
+
+    cout << "Get neighbors of 0: " << graph.getNeighbors(0).size() << endl;
+    cout << "Get neighbors of 1: " << graph.getNeighbors(1).size() << endl;
+    cout << "Get neighbors of 2: " << graph.getNeighbors(2).size() << endl;
+    cout << "Get neighbors of 3: " << graph.getNeighbors(3).size() << endl;
+
+    cout << "Vertex property 0: " << graph.getVertexProperty(0).value << endl;
+    cout << "Vertex property 1: " << graph.getVertexProperty(1).value << endl;
+    cout << "Vertex property 2: " << graph.getVertexProperty(2).value << endl;
+    cout << "Vertex property 3: " << graph.getVertexProperty(3).value << endl;
+
+    cout << "getInEdges of 0: " << graph.getInEdges(0).size() << endl;
+    cout << "getInEdges of 4: " << graph.getInEdges(4).size() << endl;
+
+    std::map<int, std::map<float, EdgeProperty<float>>> mo = graph.getOutEdges(4);
+    std::cout << "4 output edges: " << std::endl;
+    for (const auto& entry : mo) {
+        int target = entry.first;
+        const auto& edgeInfo = entry.second;
+        for (const auto& edgeEntry : edgeInfo) {
+            float edgeWeight = edgeEntry.first;
+            int edgeProperty = edgeEntry.second.value;
+            std::cout << "(4, " << (target) << "), Weight: " << edgeWeight << ", Property: " << edgeProperty << std::endl;
+        }
+    }
+
+    std::map<int, std::map<float, EdgeProperty<float>>> mi = graph.getInEdges(4);
+    std::cout << "4 input edges: " << std::endl;
+    for (const auto& entry : mi) {
+        int source = entry.first;
+        const auto& edgeInfo = entry.second;
+        for (const auto& edgeEntry : edgeInfo) {
+            float edgeWeight = edgeEntry.first;
+            int edgeProperty = edgeEntry.second.value;
+            std::cout << "(" << (source) << ", 4), Weight: " << edgeWeight << ", Property: " << edgeProperty << std::endl;
+        }
+    }
+
+    cout << "get vertex 0 id: " << graph.getVertexId(0) << endl;
+    cout << "get vertex 1 id: " << graph.getVertexId(1) << endl;
+    cout << "get vertex 2 id: " << graph.getVertexId(2) << endl;
+    cout << "get vertex 3 id: " << graph.getVertexId(3) << endl;
+
+    cout << "get vertex 0 name: " << graph.getVertexName(0) << endl;
+    cout << "get vertex 1 name: " << graph.getVertexName(1) << endl;
+    
+    cout << "Complete2!" << endl;
