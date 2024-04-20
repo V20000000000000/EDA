@@ -7,19 +7,21 @@
 #include <string>
 #include <unordered_map>
 #include <set>
+#include "Block.hpp"
 
 // Define a structure for vertex properties
 template <class T>
-struct VertexProperty {
+struct VertexProperty{
     T value;
     VertexProperty(T val) : value(val) {}
+    VertexProperty(){}// 預設建構子
 };
 
 // Define a structure for edge properties
 template <class U>
 struct EdgeProperty {
     U value;
-    EdgeProperty() : value(U()) {} // 預設建構子
+    EdgeProperty(){} // 預設建構子
     EdgeProperty(U val) : value(val) {}
     
     // Overloading the operator!=
@@ -31,11 +33,9 @@ struct EdgeProperty {
 
 // Define a structure for vertices
 struct Vertex {
-    std::string name;
     int id;
-    Vertex(int i) : name("block_" + std::to_string(i)), id(i) {}
+    Vertex(int i) : id(i) {}
     int getId() const { return id; }
-    std::string getName() const { return name; }
 };
 
 // Define a class for the graph
@@ -44,17 +44,15 @@ class HVGraph {
 private:
     std::vector<std::map<int, float>> adjacencyList;
     std::vector<std::unordered_map<int, EdgeProperty<U>>> edgePropertiesMap;
-    EdgeProperty<U> emptyEdgeProperty;
-    VertexProperty<T> emptyVertexProperty;
+    EdgeProperty<U> emptyEdgeProperty = EdgeProperty<U>();
+    VertexProperty<T> emptyVertexProperty = VertexProperty<T>();
     std::vector<VertexProperty<T>> vertexPropertiesMap; // set every vertex's property(width)
 
 public:
     // Constructor
     HVGraph(int numNodes) 
         : adjacencyList(numNodes), 
-          edgePropertiesMap(numNodes), 
-          emptyVertexProperty(T()), 
-          emptyEdgeProperty(U()) 
+          edgePropertiesMap(numNodes)
     {
         for (int i = 0; i < numNodes; ++i) {
             vertexPropertiesMap.push_back(emptyVertexProperty);
@@ -212,22 +210,6 @@ public:
             verticesList.emplace_back(i, getVertexProperty(i));
         }
         return verticesList;
-    }
-
-    std::string getVertexName(const Vertex& vertex) const {
-        return vertex.getName();
-    }
-
-    std::string getVertexName(int vertex) const {
-        return getVertexName(Vertex(vertex));
-    }
-
-    int getVertexId(const Vertex& vertex) const {
-        return vertex.getId();
-    }
-
-    int getVertexId(int vertex) const {
-        return getVertexId(Vertex(vertex));
     }
 
     // Method to get size

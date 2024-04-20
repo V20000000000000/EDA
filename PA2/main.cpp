@@ -15,6 +15,9 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+    Timer timer;
+    timer.start();
+
     assert(argc == 3 && "Usage: <input file> <output file>");
 
     string arg1(argv[1]);
@@ -34,7 +37,10 @@ int main(int argc, char **argv)
 
     outputFile.close();
 
-    cout << "Complete1!" << endl;
+
+
+    cout << "Complete!" << endl;
+    cout << "Time: " << timer.stop() << " ms" << endl;
 
     return 0;
 }
