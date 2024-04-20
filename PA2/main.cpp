@@ -8,6 +8,8 @@
 #include "InputDataParse.hpp"
 #include "HorizontalGraph.hpp"
 #include "InitialSolution.hpp"
+#include "simulated_annealing.hpp"
+#include "Timer.hpp"
 
 using namespace std;
 
@@ -33,8 +35,6 @@ int main(int argc, char **argv)
     outputFile.close();
 
     cout << "Complete1!" << endl;
-
-    
 
     return 0;
 }
