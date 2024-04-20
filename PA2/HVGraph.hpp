@@ -1,5 +1,5 @@
-#ifndef HORIZONTAL_GRAPH_HPP
-#define HORIZONTAL_GRAPH_HPP
+#ifndef HV_GRAPH_HPP
+#define HV_GRAPH_HPP
 
 #include <iostream>
 #include <vector>
@@ -40,7 +40,7 @@ struct Vertex {
 
 // Define a class for the graph
 template <class T, class U>
-class HorizontalGraph {
+class HVGraph {
 private:
     std::vector<std::map<int, float>> adjacencyList;
     std::vector<std::unordered_map<int, EdgeProperty<U>>> edgePropertiesMap;
@@ -50,7 +50,7 @@ private:
 
 public:
     // Constructor
-    HorizontalGraph(int numNodes) 
+    HVGraph(int numNodes) 
         : adjacencyList(numNodes), 
           edgePropertiesMap(numNodes), 
           emptyVertexProperty(T()), 
@@ -236,5 +236,5 @@ public:
     }
 };
 
-#endif // HORIZONTAL_GRAPH_HPP
+#endif // HV_GRAPH_HPP
 

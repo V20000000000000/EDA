@@ -10,7 +10,7 @@
 #include <random>
 #include <algorithm>
 #include <chrono>
-#include "HorizontalGraph.hpp"
+#include "HVGraph.hpp"
 #include "InputDataParse.hpp"
 #include "Timer.hpp"
 
@@ -27,11 +27,11 @@ public:
         InputDataParse parser(inputFileName);
         
         // 創建 HorizontalGraph 物件
-        HorizontalGraph<int, int> graph(parser.getNumBlocks());
+        HVGraph<int, int> Horizontalgraph (parser.getNumBlocks());
 
         // set block width in the graph
         for (int i = 0; i < parser.getNumBlocks(); ++i) {
-            graph.setVertexProperty(i, parser.getBlockWidth(i));
+            Horizontalgraph.setVertexProperty(i, parser.getBlockWidth(i));
         }
 
         // 初始化 block水平順序和垂直順序
@@ -52,19 +52,12 @@ public:
 
         cout << "Time taken to generate random permutation: " << t << " ms" << endl;
 
-        //display the horizontal permutation
-        cout << "Horizontal Permutation: ";
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-            cout << horizontalPermutation[i] << " ";
+        // connect blocks(vertex) in the horizontal graph (making edges between adjacency blocks), weight = (block1 width + block2 width) / 2
+        for (int i = 0; i < parser.getNumBlocks() - 1; ++i) {
+                float weight = (parser.getBlockWidth(horizontalPermutation[i]) + parser.getBlockWidth(horizontalPermutation[i+1])) / 2.0;
+                Horizontalgraph.addDirectedEdge(i, i + 1, weight);
         }
-        cout << endl;
-
-        //display the vertical permutation
-        cout << "Vertical Permutation: ";
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-            cout << verticalPermutation[i] << " ";
-        }
-        cout << endl;
+        
     }
 };
 

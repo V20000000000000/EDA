@@ -6,7 +6,7 @@
 #include <map>
 #include <set>
 #include "InputDataParse.hpp"
-#include "HorizontalGraph.hpp"
+#include "HVGraph.hpp"
 #include "InitialSolution.hpp"
 #include "simulated_annealing.hpp"
 #include "Timer.hpp"
