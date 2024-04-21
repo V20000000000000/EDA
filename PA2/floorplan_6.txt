@@ -1,0 +1,10 @@
+NumBlocks 6
+MinAspectRatio 0.5
+MaxAspectRatio 2
+block_0 3 3
+block_1 2 2
+block_2 3 3
+block_3 1 1
+block_4 2 2
+block_5 2 2
+

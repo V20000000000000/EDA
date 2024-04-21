@@ -7,7 +7,9 @@
 #include <string>
 #include <unordered_map>
 #include <set>
+#include <queue>
 #include "Block.hpp"
+#include <tuple>
 
 // Define a structure for vertex properties
 template <class T>
@@ -239,6 +241,102 @@ public:
         }
         return verticesList;
     }
+
+    // Method to calculate the maximum total edge weight between two vertices
+    float calculateMaxTotalEdgeWeight(int source, int target) const {
+        // Initialize a vector to store the maximum total edge weight for each vertex
+        std::vector<float> maxWeight(size(), 0.0f);
+        // Initialize a queue for breadth-first search
+        std::queue<int> q;
+        q.push(source);
+        while (!q.empty()) {
+            int current = q.front();
+            q.pop();
+            for (int neighbor : getNeighbors(current)) {
+                // Calculate the maximum total edge weight to the neighbor
+                float weightToNeighbor = maxWeight[current] + getEdgeWeight(current, neighbor);
+                // Update the maximum total edge weight for the neighbor if the new weight is greater
+                if (weightToNeighbor > maxWeight[neighbor]) {
+                    maxWeight[neighbor] = weightToNeighbor;
+                    q.push(neighbor);
+                }
+            }
+        }
+        // Return the maximum total edge weight from the source to the target
+        return maxWeight[target];
+    }
+
+    // Method to find the the maximum distance in the graph
+    std::tuple<float, int, int> findMaxDistance(bool HW) const {
+        float maxDistance = 0;
+        int source = 0;
+        int target = 0;
+
+        for (int i = 0; i < size(); ++i) {
+            auto ni = getInNeighbors(i);
+            for (int j = 0; j < size(); ++j) {
+                auto no = getOutNeighbors(j);
+                float offset = 0;
+                if (HW == false) { // Horizontal
+                    offset = getVertexProperty(i).value.getWidth();
+                } else { // Vertical
+                    offset = getVertexProperty(i).value.getHeight();
+                }
+
+                float distance = 0; // Declare distance here to be accessible outside the if blocks
+                if (ni.size() == 0 && no.size() == 0 && i != j) {
+                    distance = calculateMaxTotalEdgeWeight(i, j) + offset;
+                    if (maxDistance < distance) {
+                        source = i;
+                        target = j;
+                        maxDistance = distance;
+                    }
+                } else if (ni.size() == 0 && no.size() == 0 && i == j) {
+                    distance = offset;
+                    if (maxDistance < distance) {
+                        source = i;
+                        target = j;
+                        maxDistance = distance;
+                    }
+                }
+            }
+        }
+        return std::make_tuple(maxDistance, source, target);
+    }
+
+
+    std::tuple<float, int> findVertexMaxDistance(int target, bool HW) const {
+        float maxDistance = 0;
+        int source = 0;
+
+        for (int i = 0; i < size(); ++i) {
+            auto ni = getInNeighbors(i);
+            float offset = 0;
+            float distance = 0;
+            if (HW == false) { // Horizontal
+                offset = getVertexProperty(i).value.getWidth();
+            } else { // Vertical
+                offset = getVertexProperty(i).value.getHeight();
+            }
+
+            if (ni.size() == 0) {   // If the vertex i has no in-neighbors
+                if (i != target) {  // If the vertex i is not the target vertex
+                    distance = calculateMaxTotalEdgeWeight(i, target) + offset;
+                    if (maxDistance < distance) {
+                        source = i;
+                        maxDistance = distance;
+                    }
+                } else {        // If the vertex i is the target vertex
+                    distance = offset;
+                    source = i;
+                    return std::make_tuple(distance, source);
+                }
+            }
+        }
+        return std::make_tuple(maxDistance, source);
+    }
+
+
 
     // Method to get size
     int size() const {

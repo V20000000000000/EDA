@@ -11,6 +11,7 @@
 #include <random>
 #include <algorithm>
 #include <chrono>
+#include <tuple>
 #include "HVGraph.hpp"
 #include "InputDataParse.hpp"
 #include "Timer.hpp"
@@ -21,10 +22,15 @@ using namespace std;
 void randomPermutation(vector<int>& Permutation);
 
 class InitialSolution {
+private:
+    HVGraph<Block, int> HorizontalGraph;
+    HVGraph<Block, int> VerticalGraph;
+    InputDataParse parser;
 public:
-    InitialSolution(string inputFileName) {
+    InitialSolution(string inputFileName) : parser(inputFileName), HorizontalGraph(parser.getNumBlocks()), VerticalGraph(parser.getNumBlocks()) 
+    {
         // 讀取輸入資料
-        InputDataParse parser(inputFileName);
+        
         
         // 創建 HorizontalGraph 物件
         HVGraph<Block, int> Horizontalgraph (parser.getNumBlocks());
@@ -39,9 +45,12 @@ public:
         }
 
         // 隨機排列 block水平順序(向量中的值是index block的水平x位置)
-        randomPermutation(horizontalPermutation);
+        //randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
-        randomPermutation(verticalPermutation);
+        //randomPermutation(verticalPermutation);
+        horizontalPermutation = {1, 2, 5, 3, 4, 6};
+        verticalPermutation = {4, 2, 1, 5, 6, 3};
+
 
         // Container to store pointers to blocks
         vector<Block*> horizontalBlocksPointers(parser.getNumBlocks());
@@ -53,6 +62,7 @@ public:
             Block* horizontalBlock = new Block(i, parser.getBlockWidth(i), parser.getBlockHeight(i)); // Dynamically allocate memory for a new block for HorizontalGraph
             Block* verticalBlock = new Block(i, parser.getBlockWidth(i), parser.getBlockHeight(i)); // Dynamically allocate memory for a new block for VerticalGraph
             horizontalBlock->setWidth(parser.getBlockWidth(i));
+            cout << "block_" << i << " width: " << parser.getBlockWidth(i) << endl;
             horizontalBlock->setHeight(parser.getBlockHeight(i));
             horizontalBlock->setX(horizontalPermutation[i]);
             horizontalBlock->setY(verticalPermutation[i]);
@@ -185,26 +195,42 @@ public:
             cout << endl;
         }
 
-        //輸出每個vertex的Edgein和Edgeout(VerticalGraph)
-        cout << "VerticalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); i++)
-        {
-            std::cout << "Block_" << i << std::endl;
+        // 找到從起點開始的最大距離(HorizontalGraph)
+        cout << "HorizontalGraph" << endl;
+        float MaxDiatance;
+        int source;
+        int target;
+        std::tie(MaxDiatance, source, target) = Horizontalgraph.findMaxDistance(0);
+        cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
 
-            auto ni = Verticalgraph.getInNeighbors(i);
-            for (const auto& s : ni) {
-                float EdgeWeight = Verticalgraph.getEdgeWeight(s, i);
-                std::cout << "(" << s << ", " << i << ") with weight " << EdgeWeight << std::endl;
-            }
-            cout << endl;
-
-            auto no = Verticalgraph.getOutNeighbors(i);
-            for (const auto& t : no) {
-                float EdgeWeight = Verticalgraph.getEdgeWeight(i, t);
-                std::cout << "(" << i << ", " << t << ") with weight " << EdgeWeight << std::endl;
-            }
-            cout << endl;
+        //輸出每個vertex的最大距離(HorizontalGraph)
+        for (int i = 0; i < parser.getNumBlocks(); i++) {
+            std::tie(MaxDiatance, source) = Horizontalgraph.findVertexMaxDistance(i, 0);
+            cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from "  << source << " (first node)" << endl;
         }
+
+        // 找到從起點開始的最大距離(VerticalGraph)
+        cout << "VerticalGraph" << endl;
+        std::tie(MaxDiatance, source, target) = Verticalgraph.findMaxDistance(1);
+        cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
+
+        //輸出每個vertex的最大距離(VerticalGraph)
+        for (int i = 0; i < parser.getNumBlocks(); i++) {
+            std::tie(MaxDiatance, source) = Verticalgraph.findVertexMaxDistance(i, 11);
+            cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from "  << source << " (first node)" << endl;
+        }
+
+        //將Horizontalgraph Verticalgraph的資料存入HorizontalGraph VerticalGraph
+        HorizontalGraph = Horizontalgraph;
+        VerticalGraph = Verticalgraph;
+    }
+
+    HVGraph<Block, int> getHorizontalGraph() {
+        return HorizontalGraph;
+    }
+
+    HVGraph<Block, int> getVerticalGraph() {
+        return VerticalGraph;
     }
 };
 

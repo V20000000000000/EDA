@@ -66,12 +66,12 @@ public:
 
     void setHeight(int width) 
     {
-        this->width = width;
+        this->height = height;
     }
 
     void setWidth(int height) 
     {
-        this->height = height;
+        this->width = width;
     }
 
     void setWeight(int weight) 
