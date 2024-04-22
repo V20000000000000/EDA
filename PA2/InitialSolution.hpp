@@ -248,6 +248,7 @@ public:
         //將Horizontalgraph Verticalgraph的資料存入HorizontalGraph VerticalGraph
         HorizontalGraph = Horizontalgraph;
         VerticalGraph = Verticalgraph;
+        cout << "----------------------------------" << endl;
     }
 
     HVGraph<Block, int> getHorizontalGraph() {

@@ -32,6 +32,9 @@ int main(int argc, char **argv)
 
     // Process input file
     InitialSolution initialSolution(arg1);
+
+    /---------------------------------------------
+    
     HVGraph<Block, int> horizontalGraph = initialSolution.getHorizontalGraph();
     HVGraph<Block, int> verticalGraph = initialSolution.getVerticalGraph();
     set<int> sourceSetH = horizontalGraph.getSourceSet();
@@ -42,11 +45,20 @@ int main(int argc, char **argv)
     float chipWidth, chipHeight;
     int Htarget = 0;
     int Vtarget = 0;
-    
-    std::tie(chipWidth, std::ignore, Htarget) = horizontalGraph.findMaxDistance(sourceSetH, TargetSetH);
-    std::tie(chipHeight, std::ignore, Vtarget) = verticalGraph.findMaxDistance(sourceSetV, TargetSetV);
-    cout << "Chip width: " << chipWidth + horizontalGraph.getVertexProperty(Htarget).value.getWidth() << endl;
-    cout << "Chip height: " << chipHeight + verticalGraph.getVertexProperty(Vtarget).value.getHeight() << endl;
+
+    cout << horizontalGraph.size() << endl;
+    //-------------------------------------
+    // cout << "sourceSet" << endl;
+    // for (auto i : sourceSetH)
+    // {
+    //     cout << i << " ";
+    // }
+    // cout << endl;
+    //------------------------------
+    // std::tie(chipWidth, std::ignore, Htarget) = horizontalGraph.findMaxDistance(sourceSetH, TargetSetH);
+    // std::tie(chipHeight, std::ignore, Vtarget) = verticalGraph.findMaxDistance(sourceSetV, TargetSetV);
+    // cout << "Chip width: " << chipWidth + horizontalGraph.getVertexProperty(Htarget).value.getWidth() << endl;
+    // cout << "Chip height: " << chipHeight + verticalGraph.getVertexProperty(Vtarget).value.getHeight() << endl;
 
     //GenerateOutput generateOutput(horizontalGraph, verticalGraph);
     cout << arg2 << endl;
