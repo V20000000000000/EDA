@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     // Process input file
     InitialSolution initialSolution(arg1);
 
-    /---------------------------------------------
+    //---------------------------------------------
     
     HVGraph<Block, int> horizontalGraph = initialSolution.getHorizontalGraph();
     HVGraph<Block, int> verticalGraph = initialSolution.getVerticalGraph();
