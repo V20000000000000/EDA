@@ -35,35 +35,23 @@ int main(int argc, char **argv)
 
     //---------------------------------------------
     
-    HVGraph<Block, int> horizontalGraph = initialSolution.getHorizontalGraph();
-    HVGraph<Block, int> verticalGraph = initialSolution.getVerticalGraph();
-    set<int> sourceSetH = horizontalGraph.getSourceSet();
-    set<int> sourceSetV = verticalGraph.getSourceSet();
-    set<int> TargetSetH = horizontalGraph.getTargetSet();
-    set<int> TargetSetV = verticalGraph.getTargetSet();
+    HVGraph<Block, int> *horizontalGraph = initialSolution.getHorizontalGraph();
+    HVGraph<Block, int> *verticalGraph = initialSolution.getVerticalGraph();
 
-    float chipWidth, chipHeight;
-    int Htarget = 0;
-    int Vtarget = 0;
+    // set<int> a = horizontalGraph->getSourceSet();
 
-    cout << horizontalGraph.size() << endl;
-    //-------------------------------------
-    // cout << "sourceSet" << endl;
-    // for (auto i : sourceSetH)
-    // {
+    // cout << "SourceSet: " << endl;
+    // for (auto i : a) {
     //     cout << i << " ";
     // }
     // cout << endl;
-    //------------------------------
-    // std::tie(chipWidth, std::ignore, Htarget) = horizontalGraph.findMaxDistance(sourceSetH, TargetSetH);
-    // std::tie(chipHeight, std::ignore, Vtarget) = verticalGraph.findMaxDistance(sourceSetV, TargetSetV);
-    // cout << "Chip width: " << chipWidth + horizontalGraph.getVertexProperty(Htarget).value.getWidth() << endl;
-    // cout << "Chip height: " << chipHeight + verticalGraph.getVertexProperty(Vtarget).value.getHeight() << endl;
 
-    //GenerateOutput generateOutput(horizontalGraph, verticalGraph);
-    cout << arg2 << endl;
-    //generateOutput.generateOutputFile(arg2);
-    //generateOutput.generatePA1inputFile();
+
+
+    // GenerateOutput generateOutput(horizontalGraph, verticalGraph);
+    // cout << arg2 << endl;
+    // generateOutput.generateOutputFile(arg2);
+    // generateOutput.generatePA1inputFile();
 
     cout << "Complete!" << endl;
     cout << "Time: " << timer.stop() << " ms" << endl;

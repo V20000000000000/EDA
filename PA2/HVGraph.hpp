@@ -8,8 +8,12 @@
 #include <unordered_map>
 #include <set>
 #include <queue>
-#include "Block.hpp"
 #include <tuple>
+#include <algorithm>
+#include <cassert>
+#include "Block.hpp"
+
+
 
 // Define a structure for vertex properties
 template <class T>

@@ -49,11 +49,11 @@ public:
         }
 
         // 隨機排列 block水平順序(向量中的值是index block的水平x位置)
-        //randomPermutation(horizontalPermutation);
+        randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
-        //randomPermutation(verticalPermutation);
-        horizontalPermutation = {1, 2, 5, 3, 4, 6};
-        verticalPermutation = {4, 2, 1, 5, 6, 3};
+        randomPermutation(verticalPermutation);
+        //horizontalPermutation = {1, 2, 5, 3, 4, 6};
+        //verticalPermutation = {4, 2, 1, 5, 6, 3};
 
 
         // Container to store pointers to blocks
@@ -86,42 +86,42 @@ public:
 
 
         //輸出每個vertex中的width height值(HorizontalGraph)
-        cout << "HorizontalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-           cout << "block_" << i << " width: " << Horizontalgraph.getVertexProperty(i).value.getWidth() << " height: " << Horizontalgraph.getVertexProperty(i).value.getHeight() << endl;
-        }
-        cout << endl;
+        // cout << "HorizontalGraph" << endl;
+        // for (int i = 0; i < parser.getNumBlocks(); ++i) {
+        //    cout << "block_" << i << " width: " << Horizontalgraph.getVertexProperty(i).value.getWidth() << " height: " << Horizontalgraph.getVertexProperty(i).value.getHeight() << endl;
+        // }
+        // cout << endl;
 
         //輸出每個vertex中的width height值(VerticalGraph)
-        cout << "VerticalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-            cout << "block_" << i << " width: " << Verticalgraph.getVertexProperty(i).value.getWidth() << " height: " << Verticalgraph.getVertexProperty(i).value.getHeight() << endl;
-        }
-        cout << endl;
+        // cout << "VerticalGraph" << endl;
+        // for (int i = 0; i < parser.getNumBlocks(); ++i) {
+        //     cout << "block_" << i << " width: " << Verticalgraph.getVertexProperty(i).value.getWidth() << " height: " << Verticalgraph.getVertexProperty(i).value.getHeight() << endl;
+        // }
+        // cout << endl;
 
         //輸出每個vertex中的x y值(HorizontalGraph)
-        cout << "HorizontalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-           cout << "block_" << i << " x: " << Horizontalgraph.getVertexProperty(i).value.getX() << " y: " << Horizontalgraph.getVertexProperty(i).value.getY() << endl;
-        }
+        // cout << "HorizontalGraph" << endl;
+        // for (int i = 0; i < parser.getNumBlocks(); ++i) {
+        //    cout << "block_" << i << " x: " << Horizontalgraph.getVertexProperty(i).value.getX() << " y: " << Horizontalgraph.getVertexProperty(i).value.getY() << endl;
+        // }
 
         //輸出每個vertex中的x y值(VerticalGraph)
-        cout << "VerticalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-            cout << "block_" << i << " x: " << Verticalgraph.getVertexProperty(i).value.getX() << " y: " << Verticalgraph.getVertexProperty(i).value.getY() << endl;
-        }
+        // cout << "VerticalGraph" << endl;
+        // for (int i = 0; i < parser.getNumBlocks(); ++i) {
+        //     cout << "block_" << i << " x: " << Verticalgraph.getVertexProperty(i).value.getX() << " y: " << Verticalgraph.getVertexProperty(i).value.getY() << endl;
+        // }
 
         //輸出每個vertex中的weight值(HorizontalGraph)
-        cout << "HorizontalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-           cout << "block_" << i << " weight: " << Horizontalgraph.getVertexProperty(i).value.getWeight() << endl;
-        }
+        // cout << "HorizontalGraph" << endl;
+        // for (int i = 0; i < parser.getNumBlocks(); ++i) {
+        //    cout << "block_" << i << " weight: " << Horizontalgraph.getVertexProperty(i).value.getWeight() << endl;
+        // }
 
         //輸出每個vertex中的weight值(VerticalGraph)
-        cout << "VerticalGraph" << endl;
-        for (int i = 0; i < parser.getNumBlocks(); ++i) {
-            cout << "block_" << i << " weight: " << Verticalgraph.getVertexProperty(i).value.getWeight() << endl;
-        }
+        // cout << "VerticalGraph" << endl;
+        // for (int i = 0; i < parser.getNumBlocks(); ++i) {
+        //     cout << "block_" << i << " weight: " << Verticalgraph.getVertexProperty(i).value.getWeight() << endl;
+        // }
 
         // 建立點跟點之間的Edges(HorizontalGraph)
         //建立directedEdge的條件: (source的x座標 < target的x座標) && (source的y座標 < target的y座標) && (source weight < target weight)
@@ -168,36 +168,36 @@ public:
         sourceSetV = Verticalgraph.getSourceSet();
         targetSetV = Verticalgraph.getTargetSet();
 
-        cout << endl;
+        // cout << endl;
 
-        //顯示這些set內的東西
-        cout << "sourceSetH" << endl;
-        for (auto i = sourceSetH.begin(); i != sourceSetH.end(); ++i) {
-            cout << *i << " ";
-        }
+        // //顯示這些set內的東西
+        // // cout << "sourceSetH" << endl;
+        // // for (auto i = sourceSetH.begin(); i != sourceSetH.end(); ++i) {
+        // //     cout << *i << " ";
+        // // }
 
-        cout<< endl;
+        // cout<< endl;
 
-        cout << "targetSetH" << endl;
-        for (auto i = targetSetH.begin(); i != targetSetH.end(); ++i) {
-            cout << *i << " ";
-        }
+        // cout << "targetSetH" << endl;
+        // for (auto i = targetSetH.begin(); i != targetSetH.end(); ++i) {
+        //     cout << *i << " ";
+        // }
 
-        cout<< endl;
+        // cout<< endl;
 
-        cout << "sourceSetV" << endl;
-        for (auto i = sourceSetV.begin(); i != sourceSetV.end(); ++i) {
-            cout << *i << " ";
-        }
+        // cout << "sourceSetV" << endl;
+        // for (auto i = sourceSetV.begin(); i != sourceSetV.end(); ++i) {
+        //     cout << *i << " ";
+        // }
 
-        cout<< endl;
+        // cout<< endl;
 
-        cout << "targetSetV" << endl;
-        for (auto i = targetSetV.begin(); i != targetSetV.end(); ++i) {
-            cout << *i << " ";
-        }
+        // cout << "targetSetV" << endl;
+        // for (auto i = targetSetV.begin(); i != targetSetV.end(); ++i) {
+        //     cout << *i << " ";
+        // }
 
-        cout<< endl;
+        // cout<< endl;
 
         // 輸出每個vertex的Edgein和Edgeout(HorizontalGraph) 
         // cout << "HorizontalGraph" << endl;
@@ -251,12 +251,12 @@ public:
         cout << "----------------------------------" << endl;
     }
 
-    HVGraph<Block, int> getHorizontalGraph() {
-        return HorizontalGraph;
+    HVGraph<Block, int> *getHorizontalGraph() {
+        return &HorizontalGraph;
     }
 
-    HVGraph<Block, int> getVerticalGraph() {
-        return VerticalGraph;
+    HVGraph<Block, int> *getVerticalGraph() {
+        return &VerticalGraph;
     }
 };
 
