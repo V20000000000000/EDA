@@ -20,6 +20,7 @@ class InputDataParse
 
         InputDataParse(string inputFileName)    // Constructor
         {
+            cout << "start initialSolution of " << inputFileName << endl;
             ifstream inputFile(inputFileName);
             while(!inputFile.eof()) 
             {
@@ -71,6 +72,8 @@ class InputDataParse
                     }
                 }
             }
+            inputFile.close();
+            cout << "finish initialSolution of " << inputFileName << endl;
         };
         ~InputDataParse(){}; // Destructor
 
