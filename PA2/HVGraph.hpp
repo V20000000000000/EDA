@@ -267,76 +267,68 @@ public:
     }
 
     // Method to find the the maximum distance in the graph
-    std::tuple<float, int, int> findMaxDistance(bool HW) const {
+    std::tuple<float, int, int> findMaxDistance(set<int> ni, set<int> no) const {
         float maxDistance = 0;
         int source = 0;
         int target = 0;
 
-        for (int i = 0; i < size(); ++i) {
-            auto ni = getInNeighbors(i);
-            for (int j = 0; j < size(); ++j) {
-                auto no = getOutNeighbors(j);
-                float offset = 0;
-                if (HW == false) { // Horizontal
-                    offset = getVertexProperty(i).value.getWidth();
-                } else { // Vertical
-                    offset = getVertexProperty(i).value.getHeight();
+        for (int i : ni) 
+        {
+            for (int j : no)
+            {
+                float distance = calculateMaxTotalEdgeWeight(i, j);
+                if (maxDistance < distance) 
+                {
+                    source = i;
+                    target = j;
+                    maxDistance = distance;
                 }
-
-                float distance = 0; // Declare distance here to be accessible outside the if blocks
-                if (ni.size() == 0 && no.size() == 0 && i != j) {
-                    distance = calculateMaxTotalEdgeWeight(i, j) + offset;
-                    if (maxDistance < distance) {
-                        source = i;
-                        target = j;
-                        maxDistance = distance;
-                    }
-                } else if (ni.size() == 0 && no.size() == 0 && i == j) {
-                    distance = offset;
-                    if (maxDistance < distance) {
-                        source = i;
-                        target = j;
-                        maxDistance = distance;
-                    }
-                }
+            
             }
         }
+        
         return std::make_tuple(maxDistance, source, target);
     }
 
+    //尋找起點集合
+    set<int> getSourceSet() const {
+        set<int> sourceSet;
+        for (int i = 0; i < size(); i++) {
+            if (getInNeighbors(i).empty()) {
+                sourceSet.insert(i);
+            }
+        }
+        return sourceSet;
+    }
 
-    std::tuple<float, int> findVertexMaxDistance(int target, bool HW) const {
+    //尋找終點集合
+    set<int> getTargetSet() const {
+        set<int> targetSet;
+        for (int i = 0; i < size(); i++) {
+            if (getOutNeighbors(i).empty()) {
+                targetSet.insert(i);
+            }
+        }
+        return targetSet;
+    }
+
+
+
+    std::tuple<float, int> findVertexMaxDistance(int target, set<int> ni) const {
         float maxDistance = 0;
         int source = 0;
 
-        for (int i = 0; i < size(); ++i) {
-            auto ni = getInNeighbors(i);
-            float offset = 0;
-            float distance = 0;
-            if (HW == false) { // Horizontal
-                offset = getVertexProperty(i).value.getWidth();
-            } else { // Vertical
-                offset = getVertexProperty(i).value.getHeight();
-            }
-
-            if (ni.size() == 0) {   // If the vertex i has no in-neighbors
-                if (i != target) {  // If the vertex i is not the target vertex
-                    distance = calculateMaxTotalEdgeWeight(i, target) + offset;
-                    if (maxDistance < distance) {
-                        source = i;
-                        maxDistance = distance;
-                    }
-                } else {        // If the vertex i is the target vertex
-                    distance = offset;
-                    source = i;
-                    return std::make_tuple(distance, source);
-                }
+        for(int i : ni)
+        {
+            float distance = calculateMaxTotalEdgeWeight(i, target);
+            if (maxDistance < distance) 
+            {
+                source = i;
+                maxDistance = distance;
             }
         }
         return std::make_tuple(maxDistance, source);
     }
-
-
 
     // Method to get size
     int size() const {
