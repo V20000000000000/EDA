@@ -42,21 +42,21 @@ long double nf(long double x, generator& g){
     return x + d(g);
 }
 
-int main(int argc, char const *argv[])
-{
-    std::random_device rd;
-    std::mt19937_64 g(rd());
-    timer<std::chrono::high_resolution_clock> t;
+// int main(int argc, char const *argv[])
+// {
+//     std::random_device rd;
+//     std::mt19937_64 g(rd());
+//     timer<std::chrono::high_resolution_clock> t;
 
-    long double root   = std::atof(argv[1]);
-    std::size_t count  = std::atoi(argv[2]);
+//     long double root   = std::atof(argv[1]);
+//     std::size_t count  = std::atoi(argv[2]);
 
-    t.start();
-    root = simulated_annealing(root, count, ef, tf, nf<decltype(g)>, g);
-    t.finish();
+//     t.start();
+//     root = simulated_annealing(root, count, ef, tf, nf<decltype(g)>, g);
+//     t.finish();
 
-    std::cout << "Result: " << root << std::endl;
-    std::cout << "Time elapaed: " << t.count<double>() << '\n';
+//     std::cout << "Result: " << root << std::endl;
+//     std::cout << "Time elapaed: " << t.count<double>() << '\n';
 
-    return 0;
-}
+//     return 0;
+// }
