@@ -1,11 +1,12 @@
 NumBlocks 7
 MinAspectRatio 0.5
 MaxAspectRatio 2
-block_0 750 400
-block_1 800 500
-block_2 800 500
-block_3 625 800
-block_4 500 1000
-block_5 800 750
-block_6 800 750
+block_0 3 3
+block_1 2 2
+block_2 3 3
+block_3 1 1
+block_4 2 2
+block_5 2 2
+block_6 8 5
+
 

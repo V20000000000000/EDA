@@ -25,7 +25,7 @@ def draw_layout(chip_width, chip_height, macros):
     plt.show()
 
 
-filename = "PA2/output.txt"
+filename = "output.txt"
 with open(filename, "r") as f:
     lines = f.readlines()
     chip_width, chip_height = map(int, lines[0].split())

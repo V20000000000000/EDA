@@ -190,6 +190,11 @@ public:
         }
 
         // 將Horizontalgraph Verticalgraph的資料存入HorizontalGraph VerticalGraph
+        // horizontalGraph -> setEdgeWeight(3, 5, 5);
+        // cout << "getEdgeWeight: 3, 5: " << horizontalGraph -> getEdgeWeight(3, 5) << endl;
+        // horizontalGraph -> setEdgeWeight(3, 5, 10);
+        // cout << "getEdgeWeight: 3, 5: " << horizontalGraph -> getEdgeWeight(3, 5) << endl;
+
         horizontalGraph = horizontalGraph;
         verticalGraph = verticalGraph;
         cout << "----------------------------------" << endl;

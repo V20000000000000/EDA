@@ -76,13 +76,18 @@ int main(int argc, char *argv[])
     // cout << endl;
 
     cout << "---------------------------------------------" << endl;
+    cout << "Print HGraph" << endl;
+    hGraph->printGraph();
+    cout << "Print VGraph" << endl;
+    vGraph->printGraph();
+
+    cout << "---------------------------------------------" << endl;
 
     cout << "Generate Output" << endl;
 
     GenerateOutput generateOutput(hGraph, vGraph);
     cout << arg2 << endl;
     generateOutput.generateOutputFile(arg2);
-    generateOutput.generatePA1inputFile();
 
     cout << "Complete!" << endl;
     cout << "Time: " << timer.stop() << " ms" << endl;

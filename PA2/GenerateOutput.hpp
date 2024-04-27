@@ -18,7 +18,14 @@ private:
     HVGraph<Block *, int> *graphV;
 
 public:
-    GenerateOutput(HVGraph<Block *, int> *graph1, HVGraph<Block *, int> *graph2) : graphH(graph1), graphV(graph2) {}
+    GenerateOutput(HVGraph<Block *, int> *graph1, HVGraph<Block *, int> *graph2) : graphH(graph1), graphV(graph2)
+    {
+        // graphH -> rotateBlock(6);
+        // graphV -> rotateBlock(6);
+
+        // graphH -> recalculateVertexEdgeWeight(6, 0);
+        // graphV -> recalculateVertexEdgeWeight(6, 1);
+    }
 
     // generate output.txt
     void generateOutputFile(string &outputFileName)
@@ -52,7 +59,6 @@ public:
             y1 = y0 + height;
             outputFile << "Block_" + to_string(i) << " ";
             outputFile << width << " " << height << " " << x0 << " " << y0 << " " << x1 << " " << y1 << endl;
-            ;
         }
     }
 

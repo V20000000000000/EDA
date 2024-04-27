@@ -110,7 +110,7 @@ public:
                 getNewSolution(operation);
 
                 // Calculate the cost of the new solution
-                // update the source set and target set
+                // update the MaxDistanceH and MaxDistanceV
                 MaxDistanceH = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
                 MaxDistanceV = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
                 // cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
@@ -168,6 +168,11 @@ public:
         cout << "Move4 count: " << move4count << endl;
         cout << "Accept count: " << accpetCount << endl;
         cout << "Reject count: " << rejectCount << endl;
+        cout << "--------------------------" << endl;
+        cout << "Hgraph:" << endl;
+        graphH->printGraph();
+        cout << "Vgraph:" << endl;
+        graphV->printGraph();
     }
 
     HVGraph<Block *, int> *getHorizontalGraph() const
@@ -223,11 +228,11 @@ public:
             // 旋轉區塊
             // cout << "rotate a block" << endl;
 
-            graphH->rotateBlock(vertexIndex);
-            graphV->rotateBlock(vertexIndex);
+            graphH->rotateBlock(vertexIndex, 0);
+            graphV->rotateBlock(vertexIndex, 1);
 
-            graphH->recalculateVertexEdgeWeight(vertexIndex, 0);
-            graphV->recalculateVertexEdgeWeight(vertexIndex, 1);
+            // graphH->recalculateVertexEdgeWeight(vertexIndex, 0);
+            // graphV->recalculateVertexEdgeWeight(vertexIndex, 1);
 
             // 顯示block旋轉後的長寬
             // cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value->getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value->getHeight() << endl;
