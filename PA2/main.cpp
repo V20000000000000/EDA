@@ -9,6 +9,7 @@
 #include "InitialSolution.hpp"
 #include "Timer.hpp"
 #include "GenerateOutput.hpp"
+#include "SimulatedAnnealing.hpp"
 
 using namespace std;
 
@@ -45,19 +46,44 @@ int main(int argc, char *argv[])
     HVGraph<Block, int> *horizontalGraph = initialSolution.getHorizontalGraph();
     HVGraph<Block, int> *verticalGraph = initialSolution.getVerticalGraph();
 
-    set<int> a = horizontalGraph->getSourceSet();
-
-    cout << "SourceSet: " << endl;
-    for (auto i : a)
-    {
-        cout << i << " ";
-    }
-    cout << endl;
-
     GenerateOutput generateOutput(horizontalGraph, verticalGraph);
     cout << arg2 << endl;
     generateOutput.generateOutputFile(arg2);
     generateOutput.generatePA1inputFile();
+
+    //---------------------------------------------
+
+    // Simulated Annealing
+    // cout << "Simulated Annealing Start" << endl;
+    // SimulatedAnnealing simulatedAnnealing(horizontalGraph, verticalGraph);
+    // simulatedAnnealing.run();
+    // cout << "Simulated Annealing End" << endl;
+
+    // HVGraph<Block, int> *hGraph = simulatedAnnealing.getHorizontalGraph();
+    // HVGraph<Block, int> *vGraph = simulatedAnnealing.getVerticalGraph();
+
+    float chipWidth, chipHeight;
+
+    //---------------------------------------------
+
+
+    // set<int> a = horizontalGraph->getSourceSet();
+
+    // cout << "SourceSet: " << endl;
+    // for (auto i : a)
+    // {
+    //     cout << i << " ";
+    // }
+    // cout << endl;
+
+    cout << "---------------------------------------------" << endl;
+
+    cout << "Generate Output" << endl;
+
+    // GenerateOutput generateOutput(hGraph, vGraph);
+    // cout << arg2 << endl;
+    // generateOutput.generateOutputFile(arg2);
+    // generateOutput.generatePA1inputFile();
 
     cout << "Complete!" << endl;
     cout << "Time: " << timer.stop() << " ms" << endl;

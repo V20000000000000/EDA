@@ -56,14 +56,6 @@ public:
         return y;
     }
 
-    void swapWH()
-    {
-        int temp = width;
-        width = height;
-        height = temp;
-        aspectRatio = (float)width / height;
-    }
-
     void setHeight(int width) 
     {
         this->height = height;

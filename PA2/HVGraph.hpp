@@ -219,7 +219,7 @@ public:
     std::set<int> getInNeighbors(int vertex) const
     {
         std::set<int> neighbors;
-        for (int i = 0; i < adjacencyList.size(); ++i)
+        for (int i = 0; i < size(); ++i)
         {
             auto it = adjacencyList[i].find(vertex);
             if (it != adjacencyList[i].end())
@@ -262,7 +262,7 @@ public:
     std::map<int, std::map<float, EdgeProperty<U>>> getInEdges(int vertex) const
     {
         std::map<int, std::map<float, EdgeProperty<U>>> inEdges;
-        for (int i = 0; i < adjacencyList.size(); i++)
+        for (int i = 0; i < size(); i++)
         {
             auto it = adjacencyList[i].find(vertex);
             if (it != adjacencyList[i].end())
@@ -286,7 +286,7 @@ public:
     std::vector<std::pair<int, VertexProperty<T>>> getAllVertices() const
     {
         std::vector<std::pair<int, VertexProperty<T>>> verticesList;
-        for (int i = 0; i < adjacencyList.size(); ++i)
+        for (int i = 0; i < size(); ++i)
         {
             verticesList.emplace_back(i, getVertexProperty(i));
         }
@@ -294,10 +294,10 @@ public:
     }
 
     // Method to calculate the maximum total edge weight between two vertices
-    float calculateMaxTotalEdgeWeight(int source, int target) const
+    int calculateMaxTotalEdgeWeight(int source, int target) const
     {
         // Initialize a vector to store the maximum total edge weight for each vertex
-        std::vector<float> maxWeight(size(), 0.0f);
+        std::vector<int> maxWeight(size(), numeric_limits<int>::min());
         // Initialize a queue for breadth-first search
         std::queue<int> q;
         q.push(source);
@@ -305,10 +305,10 @@ public:
         {
             int current = q.front();
             q.pop();
-            for (int neighbor : getNeighbors(current))
+            for (int neighbor : getOutNeighbors(current))
             {
                 // Calculate the maximum total edge weight to the neighbor
-                float weightToNeighbor = maxWeight[current] + getEdgeWeight(current, neighbor);
+                int weightToNeighbor = maxWeight[current] + getEdgeWeight(current, neighbor);
                 // Update the maximum total edge weight for the neighbor if the new weight is greater
                 if (weightToNeighbor > maxWeight[neighbor])
                 {
@@ -322,7 +322,7 @@ public:
     }
 
     // Method to find the the maximum distance in the graph
-    std::tuple<float, int, int> findMaxDistance(set<int> ni, set<int> no) const
+    std::tuple<float, int, int> findMaxDistanceH(set<int> ni, set<int> no) const
     {
         float maxDistance = 0;
         int source = 0;
@@ -332,7 +332,31 @@ public:
         {
             for (int j : no)
             {
-                float distance = calculateMaxTotalEdgeWeight(i, j);
+                float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value.getWidth();
+                if (maxDistance < distance)
+                {
+                    source = i;
+                    target = j;
+                    maxDistance = distance;
+                }
+            }
+        }
+
+        return std::make_tuple(maxDistance, source, target);
+    }
+
+    // Method to find the the maximum distance in the graph
+    std::tuple<float, int, int> findMaxDistanceV(set<int> ni, set<int> no) const
+    {
+        float maxDistance = 0;
+        int source = 0;
+        int target = 0;
+
+        for (int i : ni)
+        {
+            for (int j : no)
+            {
+                float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value.getHeight();
                 if (maxDistance < distance)
                 {
                     source = i;
@@ -390,10 +414,44 @@ public:
         return std::make_tuple(maxDistance, source);
     }
 
+    //recaluclate the edgeWeight with specific vertex
+    void recalculateVertexEdgeWeight(int vertex, bool isVertical)   //isVertical = true -> vertical graph
+    {
+        //改變跟這個vertex輸入的edge的weight
+        if(isVertical){
+            for (auto &neighbor : getOutNeighbors(vertex))
+            {
+                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value.getWidth());
+            }
+        }else{
+            for (auto &neighbor : getOutNeighbors(vertex))
+            {
+                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value.getHeight());
+            }
+        }
+    }
+
+    void recalculateVertexEdgeWeight(const Vertex &vertex, bool isVertical)
+    {
+        recalculateVertexEdgeWeight(vertex.getId(), isVertical);
+    }
+
+    // Method to rotate the Hblock
+    void rotateBlock(int vertex)
+    {
+        //vertex的width和height對調
+        vertexPropertiesMap[vertex].value.rotate();
+    }
+
+    void rotateBlock(const Vertex &vertex)
+    {
+        rotateBlock(vertex.getId());
+    }
+
     // Method to get size
     int size() const
     {
-        return adjacencyList.size();
+        return adjacencyList.size()-2;
     }
 };
 

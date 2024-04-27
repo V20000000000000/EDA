@@ -1,3 +1,5 @@
+#ifndef GENERATE_OUTPUT_HPP
+#define GENERATE_OUTPUT_HPP
 #include <iostream>
 #include <vector>
 #include <tuple>
@@ -26,29 +28,22 @@ class GenerateOutput
                 return;
             }
 
-            float chipWidth, chipHeight;
-            int Htarget = 0;
-            int Vtarget = 0;
-            set<int> sourceSetH = graphH->getSourceSet();
-            set<int> sourceSetV = graphV->getSourceSet();
-            set<int> TargetSetH = graphH->getTargetSet();
-            set<int> TargetSetV = graphV->getTargetSet();
+            int chipWidth, chipHeight;
             
-            std::tie(chipWidth, std::ignore, Htarget) = graphH->findMaxDistance(sourceSetH, TargetSetH);
-            std::tie(chipHeight, std::ignore, Vtarget) = graphV->findMaxDistance(sourceSetV, TargetSetV);
-            cout << "Chip width: " << chipWidth + graphH->getVertexProperty(Htarget).value.getWidth() << endl;
-            cout << "Chip height: " << chipHeight + graphV->getVertexProperty(Vtarget).value.getHeight() << endl;
+            chipWidth = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
+            chipHeight = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
+            cout << "Chip width: " << chipWidth << endl;
+            cout << "Chip height: " << chipHeight << endl;
 
-            outputFile <<  chipWidth + graphH->getVertexProperty(Htarget).value.getWidth() << " " << chipHeight + graphV->getVertexProperty(Vtarget).value.getHeight() << endl;
+            outputFile << chipWidth << " " << chipHeight << endl;
 
             for (int i = 0; i < graphH->size(); i++) {
                 int x0, y0, x1, y1;
-                std::tie(x0, std::ignore) = graphH->findVertexMaxDistance(i, sourceSetH);
-                std::tie(y0, std::ignore) = graphV->findVertexMaxDistance(i, sourceSetV);
+                x0 = graphH->calculateMaxTotalEdgeWeight(graphH->size(), i);
+                y0 = graphV->calculateMaxTotalEdgeWeight(graphV->size(), i);
                 int width = graphH->getVertexProperty(i).value.getWidth();
                 int height = graphV->getVertexProperty(i).value.getHeight();
-                cout << "Node" << i << ": " << "x0 = " << x0 << ", y0 = " << y0 <<  " width: " << width << " height: " << height << endl;
-
+                //cout << "Node" << i << ": " << "x0 = " << x0 << ", y0 = " << y0 <<  " width: " << width << " height: " << height << endl;
                 
                 x1 = x0 + width;
                 y1 = y0 + height;
@@ -66,25 +61,19 @@ class GenerateOutput
                 return;
             }
 
-            float chipWidth, chipHeight;
-            int Htarget = 0;
-            int Vtarget = 0;
-            set<int> sourceSetH = graphH->getSourceSet();
-            set<int> sourceSetV = graphV->getSourceSet();
-            set<int> TargetSetH = graphH->getTargetSet();
-            set<int> TargetSetV = graphV->getTargetSet();
+            int chipWidth, chipHeight;
             
             cout << "------------------------------------" << endl;
-            std::tie(chipWidth, std::ignore, Htarget) = graphH->findMaxDistance(sourceSetH, TargetSetH);
-            std::tie(chipHeight, std::ignore, Vtarget) = graphV->findMaxDistance(sourceSetV, TargetSetV);
-            outputFile << "Boundary " << chipWidth + graphH->getVertexProperty(Htarget).value.getWidth() << " " << chipHeight + graphV->getVertexProperty(Vtarget).value.getHeight() << endl;
+            chipWidth = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
+            chipHeight = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
+            outputFile << "Boundary " << chipWidth << " " << chipHeight << endl;
 
             outputFile << "Macros " << graphH->size() << endl;
 
             for (int i = 0; i < graphH->size(); i++) {
                 int x0, y0, x1, y1;
-                std::tie(x0, std::ignore) = graphH->findVertexMaxDistance(i, sourceSetH);
-                std::tie(y0, std::ignore) = graphV->findVertexMaxDistance(i, sourceSetV);
+                x0 = graphH->calculateMaxTotalEdgeWeight(graphH->size(), i);
+                y0 = graphV->calculateMaxTotalEdgeWeight(graphV->size(), i);
                 int width = graphH->getVertexProperty(i).value.getWidth();
                 int height = graphV->getVertexProperty(i).value.getHeight();
                 cout << "Node" << i << ": " << "x0 = " << x0 << ", y0 = " << y0 <<  " width: " << width << " height: " << height << endl;
@@ -94,8 +83,9 @@ class GenerateOutput
                 outputFile << "Block_" + to_string(i) + " " << x0 << " " << y0 << " " << x1 << " " << y1 << endl;
             }
         }
-
-
 };
+
+#endif
+
 
 
