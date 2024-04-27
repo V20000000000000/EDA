@@ -26,10 +26,6 @@ class InitialSolution
 private:
     HVGraph<Block, int> *HorizontalGraph;
     HVGraph<Block, int> *VerticalGraph;
-    set<int> sourceSetH;
-    set<int> targetSetH;
-    set<int> sourceSetV;
-    set<int> targetSetV;
     InputDataParse *parser;
 
 public:
@@ -57,11 +53,11 @@ public:
         }
         cout << "parser.getNumBlocks(): " << parser->getNumBlocks() << endl;
         // 隨機排列 block水平順序(向量中的值是index block的水平x位置)
-        //randomPermutation(horizontalPermutation);
+        randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
-        //randomPermutation(verticalPermutation);
-        horizontalPermutation = {1, 2, 5, 3, 4, 6};
-        verticalPermutation = {4, 2, 1, 5, 6, 3};
+        randomPermutation(verticalPermutation);
+        //horizontalPermutation = {1, 2, 5, 3, 4, 6};
+        //verticalPermutation = {4, 2, 1, 5, 6, 3};
 
         // Container to store pointers to blocks
         vector<Block *> horizontalBlocksPointers(parser->getNumBlocks() + 2);
@@ -166,11 +162,11 @@ public:
         // cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
 
         // 輸出每個vertex的最大距離(HorizontalGraph)
-        for (int i = 0; i < parser->getNumBlocks(); i++)
-        {
-            std::tie(MaxDiatance, source) = HorizontalGraph->findVertexMaxDistance(i, sourceSetH);
-            //cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from " << source << " (first node)" << endl;
-        }
+        // for (int i = 0; i < parser->getNumBlocks(); i++)
+        // {
+        //     std::tie(MaxDiatance, source) = HorizontalGraph->findVertexMaxDistance(i, sourceSetH);
+        //     //cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from " << source << " (first node)" << endl;
+        // }
 
         // 找到從起點開始的最大距離(VerticalGraph)
         //cout << "VerticalGraph" << endl;
@@ -188,7 +184,6 @@ public:
         HorizontalGraph = HorizontalGraph;
         VerticalGraph = VerticalGraph;
         cout << "----------------------------------" << endl;
-        cout << "1 > sink: " << HorizontalGraph->calculateMaxTotalEdgeWeight(1, 5) << endl; 
     }
 
     HVGraph<Block, int> *getHorizontalGraph() const

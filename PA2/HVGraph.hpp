@@ -11,6 +11,8 @@
 #include <tuple>
 #include <algorithm>
 #include <cassert>
+#include <limits>
+
 #include "Block.hpp"
 
 // Define a structure for vertex properties
@@ -298,6 +300,7 @@ public:
     {
         // Initialize a vector to store the maximum total edge weight for each vertex
         std::vector<int> maxWeight(size(), numeric_limits<int>::min());
+        maxWeight[source] = 0;
         // Initialize a queue for breadth-first search
         std::queue<int> q;
         q.push(source);

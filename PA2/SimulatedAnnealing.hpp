@@ -70,22 +70,18 @@ public:
         accpetCount = 0;
         rejectCount = 0;
 
-        P = 7 * graphH->size();
+        P = 1 * graphH->size();
 
         // Get the chip width and height
-        int Htarget = 0;
-        int Vtarget = 0;
         cout << "--------------------------" << endl;
-        cout << "--------------------------" << endl;
-        cout << "5>6: " << graphH->calculateMaxTotalEdgeWeight(6, graphH->size() + 1) << endl;
         MaxDistanceH = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
         MaxDistanceV = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
         cout << "--------------------------" << endl;
         cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
         cout << "--------------------------" << endl;
 
-        float preDistH = MaxDistanceH;
-        float preDistV = MaxDistanceV;
+        int preDistH = MaxDistanceH;
+        int preDistV = MaxDistanceV;
         
         // Initialize the best cost
         initialCost = max(MaxDistanceH, MaxDistanceV);
@@ -102,6 +98,8 @@ public:
             {
                 preDistH = MaxDistanceH;
                 preDistV = MaxDistanceV;
+                cout << "preDistH: " << preDistH << " ";
+                cout << "preDistV: " << preDistV << endl;
                 
                 // random select a operation
                 int operation = getRandomOperation();
@@ -113,15 +111,12 @@ public:
                 //update the source set and target set
                 MaxDistanceH = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
                 MaxDistanceV = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
+                //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
                 currentCost = max(MaxDistanceH, MaxDistanceV);
                 
 
                 // Calculate the cost difference
                 int costDifference = currentCost - bestCost;
-
-                //test
-                //currentCost = bestCost + 1;
-                //double costDifference = getRandomProbability() * 1000 - 500;
 
                 // If the new solution is better, accept it
                 if(currentCost < bestCost)
@@ -144,6 +139,7 @@ public:
                         getNewSolution(operation);  // Back to the original solution
                         MaxDistanceH = preDistH;
                         MaxDistanceV = preDistV;
+                        cout << "reject" << endl;
                         rejectCount++;
                     }
                 }
@@ -154,7 +150,7 @@ public:
             cout << "step: " << step << " ";
             cout << "Best solution: " << bestCost << endl;
             //cout << "Temperature: " << temperature << endl;
-            //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
+            cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
             temperature = temperature * coolingRate;
         }
 
