@@ -299,7 +299,7 @@ public:
     int calculateMaxTotalEdgeWeight(int source, int target) const
     {
         // Initialize a vector to store the maximum total edge weight for each vertex
-        std::vector<int> maxWeight(size(), numeric_limits<int>::min());
+        std::vector<int> maxWeight(size()+2, numeric_limits<int>::min());
         maxWeight[source] = 0;
         // Initialize a queue for breadth-first search
         std::queue<int> q;
@@ -335,7 +335,7 @@ public:
         {
             for (int j : no)
             {
-                float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value.getWidth();
+                float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value->getWidth();
                 if (maxDistance < distance)
                 {
                     source = i;
@@ -359,7 +359,7 @@ public:
         {
             for (int j : no)
             {
-                float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value.getHeight();
+                float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value->getHeight();
                 if (maxDistance < distance)
                 {
                     source = i;
@@ -417,19 +417,22 @@ public:
         return std::make_tuple(maxDistance, source);
     }
 
-    //recaluclate the edgeWeight with specific vertex
-    void recalculateVertexEdgeWeight(int vertex, bool isVertical)   //isVertical = true -> vertical graph
+    // recaluclate the edgeWeight with specific vertex
+    void recalculateVertexEdgeWeight(int vertex, bool isVertical) // isVertical = true -> vertical graph
     {
-        //改變跟這個vertex輸入的edge的weight
-        if(isVertical){
+        // 改變跟這個vertex輸入的edge的weight
+        if (isVertical)
+        {
             for (auto &neighbor : getOutNeighbors(vertex))
             {
-                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value.getWidth());
+                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value->getWidth());
             }
-        }else{
+        }
+        else
+        {
             for (auto &neighbor : getOutNeighbors(vertex))
             {
-                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value.getHeight());
+                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value->getHeight());
             }
         }
     }
@@ -442,8 +445,8 @@ public:
     // Method to rotate the Hblock
     void rotateBlock(int vertex)
     {
-        //vertex的width和height對調
-        vertexPropertiesMap[vertex].value.rotate();
+        // vertex的width和height對調
+        vertexPropertiesMap[vertex].value->rotate();
     }
 
     void rotateBlock(const Vertex &vertex)
@@ -451,10 +454,23 @@ public:
         rotateBlock(vertex.getId());
     }
 
+    void printGraph()
+    {
+        for (int i = 0; i < size() + 2; i++)
+        {
+            cout << "Node " << i << ": ";
+            for (auto &neighbor : getOutNeighbors(i))
+            {
+                cout << neighbor << "(" << getEdgeWeight(i, neighbor) << ") ";
+            }
+            cout << endl;
+        }
+    }
+
     // Method to get size
     int size() const
     {
-        return adjacencyList.size()-2;
+        return adjacencyList.size() - 2;
     }
 };
 

@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 
     //---------------------------------------------
 
-    HVGraph<Block, int> *horizontalGraph = initialSolution.getHorizontalGraph();
-    HVGraph<Block, int> *verticalGraph = initialSolution.getVerticalGraph();
+    HVGraph<Block *, int> *horizontalGraph = initialSolution.getHorizontalGraph();
+    HVGraph<Block *, int> *verticalGraph = initialSolution.getVerticalGraph();
 
     // GenerateOutput generateOutput(horizontalGraph, verticalGraph);
     // cout << arg2 << endl;
@@ -53,19 +53,18 @@ int main(int argc, char *argv[])
 
     //---------------------------------------------
 
-    //Simulated Annealing
+    // Simulated Annealing
     cout << "Simulated Annealing Start" << endl;
     SimulatedAnnealing simulatedAnnealing(horizontalGraph, verticalGraph);
     simulatedAnnealing.run();
     cout << "Simulated Annealing End" << endl;
 
-    HVGraph<Block, int> *hGraph = simulatedAnnealing.getHorizontalGraph();
-    HVGraph<Block, int> *vGraph = simulatedAnnealing.getVerticalGraph();
+    HVGraph<Block *, int> *hGraph = simulatedAnnealing.getHorizontalGraph();
+    HVGraph<Block *, int> *vGraph = simulatedAnnealing.getVerticalGraph();
 
-    //float chipWidth, chipHeight;
+    // float chipWidth, chipHeight;
 
     //---------------------------------------------
-
 
     // set<int> a = horizontalGraph->getSourceSet();
 

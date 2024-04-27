@@ -21,7 +21,8 @@ int getRandomOperation();
 int getRandomBlock(int numBlock);
 float getRandomProbability();
 
-class SimulatedAnnealing {
+class SimulatedAnnealing
+{
 private:
     double temperature;
     double coolingRate;
@@ -39,14 +40,14 @@ private:
     int accpetCount;
     int rejectCount;
     int P;
-    HVGraph <Block, int> *graphH;
-    HVGraph <Block, int> *graphV;
+    HVGraph<Block *, int> *graphH;
+    HVGraph<Block *, int> *graphV;
 
 public:
     // Constructor
-    SimulatedAnnealing(HVGraph<Block, int> *graphH, HVGraph<Block, int> *graphV): graphH(graphH), graphV(graphV){}
+    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV) {}
     // Destructor
-    ~SimulatedAnnealing(){}
+    ~SimulatedAnnealing() {}
 
     void run()
     {
@@ -82,7 +83,7 @@ public:
 
         int preDistH = MaxDistanceH;
         int preDistV = MaxDistanceV;
-        
+
         // Initialize the best cost
         initialCost = max(MaxDistanceH, MaxDistanceV);
         initialDistanceH = MaxDistanceH;
@@ -98,32 +99,32 @@ public:
             {
                 preDistH = MaxDistanceH;
                 preDistV = MaxDistanceV;
-                cout << "preDistH: " << preDistH << " ";
-                cout << "preDistV: " << preDistV << endl;
-                
+                // cout << "preDistH: " << preDistH << " ";
+                // cout << "preDistV: " << preDistV << endl;
+
                 // random select a operation
                 int operation = getRandomOperation();
-
+                
                 // Create a new solution
+                // cout << "Operation: " << operation << endl;
                 getNewSolution(operation);
 
                 // Calculate the cost of the new solution
-                //update the source set and target set
+                // update the source set and target set
                 MaxDistanceH = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
                 MaxDistanceV = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
-                //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
+                // cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
                 currentCost = max(MaxDistanceH, MaxDistanceV);
-                
 
                 // Calculate the cost difference
                 int costDifference = currentCost - bestCost;
 
                 // If the new solution is better, accept it
-                if(currentCost < bestCost)
+                if (currentCost < bestCost)
                 {
                     bestCost = currentCost;
                 }
-                else    // If the new solution is worse, accept it with a probability
+                else // If the new solution is worse, accept it with a probability
                 {
                     double probabilityThreshold = exp(-costDifference / temperature);
                     double probability = getRandomProbability();
@@ -136,20 +137,22 @@ public:
                     }
                     else
                     {
-                        getNewSolution(operation);  // Back to the original solution
+                        // cout << "hi" << endl;
+                        getNewSolution(operation); // Back to the original solution
                         MaxDistanceH = preDistH;
                         MaxDistanceV = preDistV;
-                        cout << "reject" << endl;
+                        // cout << "reject" << endl;
                         rejectCount++;
                     }
                 }
+                // cout << endl;
                 // If the new solution is the best, update the best solution
             }
             step = step + 1;
             // Cool the temperature
             cout << "step: " << step << " ";
             cout << "Best solution: " << bestCost << endl;
-            //cout << "Temperature: " << temperature << endl;
+            // cout << "Temperature: " << temperature << endl;
             cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
             temperature = temperature * coolingRate;
         }
@@ -167,12 +170,12 @@ public:
         cout << "Reject count: " << rejectCount << endl;
     }
 
-    HVGraph<Block, int> *getHorizontalGraph() const
+    HVGraph<Block *, int> *getHorizontalGraph() const
     {
         return graphH;
     }
 
-    HVGraph<Block, int> *getVerticalGraph() const
+    HVGraph<Block *, int> *getVerticalGraph() const
     {
         return graphV;
     }
@@ -181,57 +184,57 @@ public:
     {
         switch (operation)
         {
-            // swap two blocks only in X
-            case 0:
-            {
-                // 在水平序列中交換兩個區塊的代碼
-                //cout << "swap two blocks only in X" << endl;
-                move1count++;
-                break;
-            }
+        // swap two blocks only in X
+        case 0:
+        {
+            // 在水平序列中交換兩個區塊的代碼
+            // cout << "swap two blocks only in X" << endl;
+            move1count++;
+            break;
+        }
 
-            // swap two blocks only in Y
-            case 1:
-            {
-                // 在垂直序列中交換兩個區塊的代碼
-                //cout << "swap two blocks only in Y" << endl;
-                move2count++;
-                break;
-            }
+        // swap two blocks only in Y
+        case 1:
+        {
+            // 在垂直序列中交換兩個區塊的代碼
+            // cout << "swap two blocks only in Y" << endl;
+            move2count++;
+            break;
+        }
 
-            // swap two blocks in both sequence
-            case 2:
-            {
-                // 同時在水平和垂直序列中交換兩個區塊的代碼
-                //cout << "swap two blocks in both sequence" << endl;
-                move3count++;
-                break;
-            }
+        // swap two blocks in both sequence
+        case 2:
+        {
+            // 同時在水平和垂直序列中交換兩個區塊的代碼
+            // cout << "swap two blocks in both sequence" << endl;
+            move3count++;
+            break;
+        }
 
-            // rotate a block
-            case 3:
-            {
-                // 隨機選擇一個頂點的索引
-                int vertexIndex = getRandomBlock(graphH->size());
+        // rotate a block
+        case 3:
+        {
+            // 隨機選擇一個頂點的索引
+            int vertexIndex = getRandomBlock(graphH->size());
 
-                //顯示block原本的長寬
-                //cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value.getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value.getHeight() << endl;
-                
-                // 旋轉區塊
-                //cout << "rotate a block" << endl;
+            // 顯示block原本的長寬
+            // cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value->getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value->getHeight() << endl;
 
-                graphH->rotateBlock(vertexIndex);
-                graphV->rotateBlock(vertexIndex);
+            // 旋轉區塊
+            // cout << "rotate a block" << endl;
 
-                graphH->recalculateVertexEdgeWeight(vertexIndex, 0);
-                graphV->recalculateVertexEdgeWeight(vertexIndex, 1);
+            graphH->rotateBlock(vertexIndex);
+            graphV->rotateBlock(vertexIndex);
 
-                //顯示block旋轉後的長寬
-                //cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value.getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value.getHeight() << endl;
-                
-                move4count++;
-                break;
-            }
+            graphH->recalculateVertexEdgeWeight(vertexIndex, 0);
+            graphV->recalculateVertexEdgeWeight(vertexIndex, 1);
+
+            // 顯示block旋轉後的長寬
+            // cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value->getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value->getHeight() << endl;
+
+            move4count++;
+            break;
+        }
         }
     }
 };
@@ -244,7 +247,7 @@ int getRandomOperation()
     seed1 = rd();
     seed2 = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 gen(seed1 + seed2);
-    
+
     // 生成0到3之間的隨機數
     std::uniform_int_distribution<int> dis(0, 3);
     return dis(gen);
@@ -258,9 +261,9 @@ int getRandomBlock(int numBlock)
     seed1 = rd();
     seed2 = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 gen(seed1 + seed2);
-    
+
     // 生成0到numBlock之間的隨機數
-    std::uniform_int_distribution<int> dis(0, numBlock-1);
+    std::uniform_int_distribution<int> dis(0, numBlock - 1);
     return dis(gen);
 }
 
@@ -271,11 +274,10 @@ float getRandomProbability()
     seed1 = rd();
     seed2 = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 gen(seed1 + seed2);
-    
+
     // 生成0到RAND_MAX之間的隨機整數，然後將其除以RAND_MAX來獲得0到1之間的隨機浮點數
     std::uniform_real_distribution<float> dis(0.0f, 1.0f);
     return dis(gen);
 }
-
 
 #endif // SIMULATED_ANNEALING_HPP
