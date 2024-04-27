@@ -24,23 +24,23 @@ void randomPermutation(vector<int> &Permutation);
 class InitialSolution
 {
 private:
-    HVGraph<Block, int> *HorizontalGraph;
-    HVGraph<Block, int> *VerticalGraph;
+    HVGraph<Block *, int> *horizontalGraph;
+    HVGraph<Block *, int> *verticalGraph;
     InputDataParse *parser;
 
 public:
     ~InitialSolution()
     {
-        delete HorizontalGraph;
-        delete VerticalGraph;
+        delete horizontalGraph;
+        delete verticalGraph;
         delete parser;
     }
 
     InitialSolution(string inputFileName)
     {
         parser = new InputDataParse(inputFileName);
-        HorizontalGraph = new HVGraph<Block, int>(parser->getNumBlocks() + 2);
-        VerticalGraph = new HVGraph<Block, int>(parser->getNumBlocks() + 2);
+        horizontalGraph = new HVGraph<Block *, int>(parser->getNumBlocks() + 2);
+        verticalGraph = new HVGraph<Block *, int>(parser->getNumBlocks() + 2);
 
         cout << "start initialSolution" << endl;
         // 初始化 block水平垂直順序
@@ -56,12 +56,12 @@ public:
         randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
         randomPermutation(verticalPermutation);
-        //horizontalPermutation = {1, 2, 5, 3, 4, 6};
-        //verticalPermutation = {4, 2, 1, 5, 6, 3};
+        // horizontalPermutation = {1, 2, 5, 3, 4, 6};
+        // verticalPermutation = {4, 2, 1, 5, 6, 3};
 
         // Container to store pointers to blocks
-        vector<Block *> horizontalBlocksPointers(parser->getNumBlocks() + 2);
-        vector<Block *> verticalBlocksPointers(parser->getNumBlocks() + 2);
+        // vector<Block *> horizontalBlocksPointers(parser->getNumBlocks() + 2);
+        // vector<Block *> verticalBlocksPointers(parser->getNumBlocks() + 2);
 
         // 把每個block的資料放進去(HorizontalGraph)(VerticalGraph)
         for (int i = 0; i < parser->getNumBlocks(); ++i)
@@ -74,35 +74,37 @@ public:
             horizontalBlock->setX(horizontalPermutation[i]);
             horizontalBlock->setY(verticalPermutation[i]);
             horizontalBlock->setWeight((horizontalPermutation[i] + verticalPermutation[i]));
-            HorizontalGraph->setVertexProperty(i, *horizontalBlock);
+            horizontalGraph->setVertexProperty(i, horizontalBlock);
 
             verticalBlock->setWidth(parser->getBlockWidth(i));
             verticalBlock->setHeight(parser->getBlockHeight(i));
             verticalBlock->setX(horizontalPermutation[i]);
             verticalBlock->setY(verticalPermutation[i]);
             verticalBlock->setWeight((verticalPermutation[i] - horizontalPermutation[i]));
-            VerticalGraph->setVertexProperty(i, *verticalBlock);
+            verticalGraph->setVertexProperty(i, verticalBlock);
 
-            horizontalBlocksPointers[i] = horizontalBlock; // Store the pointer to the dynamically allocated block for HorizontalGraph
-            verticalBlocksPointers[i] = verticalBlock;     // Store the pointer to the dynamically allocated block for VerticalGraph
+            // horizontalBlocksPointers[i] = horizontalBlock; // Store the pointer to the dynamically allocated block for HorizontalGraph
+            // verticalBlocksPointers[i] = verticalBlock;     // Store the pointer to the dynamically allocated block for VerticalGraph
         }
 
         // 把source跟target放進去(HorizontalGraph)(VerticalGraph)
-        Block *sourceBlockH = new Block(parser->getNumBlocks(), 0, 0); // Dynamically allocate memory for a new block for HorizontalGraph
+        Block *sourceBlockH = new Block(parser->getNumBlocks(), 0, 0);     // Dynamically allocate memory for a new block for HorizontalGraph
         Block *targetBlockH = new Block(parser->getNumBlocks() + 1, 0, 0); // Dynamically allocate memory for a new block for HorizontalGraph
-        horizontalBlocksPointers[parser->getNumBlocks()] = sourceBlockH;
-        horizontalBlocksPointers[parser->getNumBlocks() + 1] = targetBlockH;
-        HorizontalGraph->setVertexProperty(parser->getNumBlocks(), *sourceBlockH);
+        // horizontalBlocksPointers[parser->getNumBlocks()] = sourceBlockH;
+        // horizontalBlocksPointers[parser->getNumBlocks() + 1] = targetBlockH;
+        horizontalGraph->setVertexProperty(parser->getNumBlocks(), sourceBlockH);
+        horizontalGraph->setVertexProperty(parser->getNumBlocks() + 1, targetBlockH);
 
-        Block *sourceBlockV = new Block(parser->getNumBlocks(), 0, 0); // Dynamically allocate memory for a new block for VerticalGraph
+        Block *sourceBlockV = new Block(parser->getNumBlocks(), 0, 0);     // Dynamically allocate memory for a new block for VerticalGraph
         Block *targetBlockV = new Block(parser->getNumBlocks() + 1, 0, 0); // Dynamically allocate memory for a new block for VerticalGraph
-        verticalBlocksPointers[parser->getNumBlocks()] = sourceBlockV;
-        verticalBlocksPointers[parser->getNumBlocks() + 1] = targetBlockV;
-        VerticalGraph->setVertexProperty(parser->getNumBlocks(), *sourceBlockV);
+        // verticalBlocksPointers[parser->getNumBlocks()] = sourceBlockV;
+        // verticalBlocksPointers[parser->getNumBlocks() + 1] = targetBlockV;
+        verticalGraph->setVertexProperty(parser->getNumBlocks(), sourceBlockV);
+        verticalGraph->setVertexProperty(parser->getNumBlocks() + 1, targetBlockV);
 
         cout << "build edges between nodes:" << endl;
         // 建立點跟點之間的Edges(HorizontalGraph)
-        // 建立directedEdge的條件: (source的x座標 < target的x座標) && (source的y座標 < target的y座標) && (source weight < target weight)
+        // 建立directedEdge的條件: (source的x座標 < target的x座標) && (source的y座標 < target的y座標)
         int sWeight = 0;
         for (int t = 0; t < parser->getNumBlocks(); t++)
         {
@@ -110,16 +112,21 @@ public:
             {
                 if (s != t)
                 {
-                    if (HorizontalGraph->getVertexProperty(s).value.getWeight() < HorizontalGraph->getVertexProperty(t).value.getWeight())
+                    int x1 = horizontalGraph->getVertexProperty(s).value->getX();
+                    int y1 = horizontalGraph->getVertexProperty(s).value->getY();
+                    int x2 = horizontalGraph->getVertexProperty(t).value->getX();
+                    int y2 = horizontalGraph->getVertexProperty(t).value->getY();
+
+                    if (x1 < x2 && y1 < y2)
                     {
-                        if ((HorizontalGraph->getVertexProperty(s).value.getX() < HorizontalGraph->getVertexProperty(t).value.getX()) && (HorizontalGraph->getVertexProperty(s).value.getY() < HorizontalGraph->getVertexProperty(t).value.getY()))
-                        {
-                            // cout << "s.x: " << Horizontalgraph.getVertexProperty(s).value.getX() << " s.y: " << Horizontalgraph.getVertexProperty(s).value.getY() << " t.x: " << Horizontalgraph.getVertexProperty(t).value.getX() << " t.y: " << Horizontalgraph.getVertexProperty(t).value.getY() << endl;
-                            HorizontalGraph->addDirectedEdge(s, t, HorizontalGraph->getVertexProperty(s).value.getWidth());
-                        }
+                        horizontalGraph->addDirectedEdge(s, t, horizontalGraph->getVertexProperty(s).value->getWidth());
                     }
                 }
             }
+            // source to t 
+            horizontalGraph->addDirectedEdge(parser->getNumBlocks(), t, 0);
+            // t to target
+            horizontalGraph->addDirectedEdge(t, parser->getNumBlocks() + 1, horizontalGraph->getVertexProperty(t).value->getWidth());
         }
 
         // 建立點跟點之間的Edges(VerticalGraph)
@@ -130,27 +137,29 @@ public:
             {
                 if (t != s)
                 {
-                    if (VerticalGraph->getVertexProperty(s).value.getWeight() < VerticalGraph->getVertexProperty(t).value.getWeight())
+                    int x1 = verticalGraph->getVertexProperty(s).value->getX();
+                    int y1 = verticalGraph->getVertexProperty(s).value->getY();
+                    int x2 = verticalGraph->getVertexProperty(t).value->getX();
+                    int y2 = verticalGraph->getVertexProperty(t).value->getY();
+
+                    if (x1 > x2 && y1 < y2)
                     {
-                        if ((VerticalGraph->getVertexProperty(s).value.getX() > VerticalGraph->getVertexProperty(t).value.getX()) && (VerticalGraph->getVertexProperty(s).value.getY() < VerticalGraph->getVertexProperty(t).value.getY()))
-                        {
-                            // cout << "s.x: " << Verticalgraph.getVertexProperty(s).value.getX() << " s.y: " << Verticalgraph.getVertexProperty(s).value.getY() << " t.x: " << Verticalgraph.getVertexProperty(t).value.getX() << " t.y: " << Verticalgraph.getVertexProperty(t).value.getY() << endl;
-                            VerticalGraph->addDirectedEdge(s, t, VerticalGraph->getVertexProperty(s).value.getHeight());
-                        }
+                        verticalGraph->addDirectedEdge(s, t, verticalGraph->getVertexProperty(s).value->getHeight());
                     }
                 }
             }
+            // source to s
+            verticalGraph->addDirectedEdge(parser->getNumBlocks(), s, 0);
+            // s to target
+            verticalGraph->addDirectedEdge(s, parser->getNumBlocks() + 1, verticalGraph->getVertexProperty(s).value->getHeight());
         }
 
-        // 建立source跟最左邊那幾個點的Edges(HorizontalGraph) 
-        for (int i = 0; i < parser->getNumBlocks(); i++)
-        {
-            HorizontalGraph->addDirectedEdge(parser->getNumBlocks(), i, 0);
-            VerticalGraph->addDirectedEdge(parser->getNumBlocks(), i, 0);
+        // 印出HorizontalGraph跟VerticalGraph的資料
+        cout << "HorizontalGraph:" << endl;
+        horizontalGraph->printGraph();
+        cout << "VerticalGraph:" << endl;
+        verticalGraph->printGraph();
 
-            HorizontalGraph->addDirectedEdge(i, parser->getNumBlocks() + 1, HorizontalGraph->getVertexProperty(i).value.getWidth());
-            VerticalGraph->addDirectedEdge(i, parser->getNumBlocks() + 1, VerticalGraph->getVertexProperty(i).value.getHeight());
-        }
 
         cout << "findMaxDistance:" << endl;
         // 找到從起點開始的最大距離(HorizontalGraph)
@@ -169,31 +178,31 @@ public:
         // }
 
         // 找到從起點開始的最大距離(VerticalGraph)
-        //cout << "VerticalGraph" << endl;
+        // cout << "VerticalGraph" << endl;
         // std::tie(MaxDiatance, source, target) = VerticalGraph->findMaxDistance(sourceSetV, targetSetV);
-        //cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
+        // cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
 
         // 輸出每個vertex的最大距離(VerticalGraph)
         for (int i = 0; i < parser->getNumBlocks(); i++)
         {
-            //std::tie(MaxDiatance, source) = VerticalGraph->findVertexMaxDistance(i, sourceSetV);
-            //cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from " << source << " (first node)" << endl;
+            // std::tie(MaxDiatance, source) = VerticalGraph->findVertexMaxDistance(i, sourceSetV);
+            // cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from " << source << " (first node)" << endl;
         }
 
         // 將Horizontalgraph Verticalgraph的資料存入HorizontalGraph VerticalGraph
-        HorizontalGraph = HorizontalGraph;
-        VerticalGraph = VerticalGraph;
+        horizontalGraph = horizontalGraph;
+        verticalGraph = verticalGraph;
         cout << "----------------------------------" << endl;
     }
 
-    HVGraph<Block, int> *getHorizontalGraph() const
+    HVGraph<Block *, int> *getHorizontalGraph() const
     {
-        return HorizontalGraph;
+        return horizontalGraph;
     }
 
-    HVGraph<Block, int> *getVerticalGraph() const
+    HVGraph<Block *, int> *getVerticalGraph() const
     {
-        return VerticalGraph;
+        return verticalGraph;
     }
 };
 
