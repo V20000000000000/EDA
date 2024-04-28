@@ -266,6 +266,29 @@ public:
         {
             // 同時在水平和垂直序列中交換兩個區塊的代碼
             // cout << "swap two blocks in both sequence" << endl;
+            int vertexIndex1, vertexIndex2;
+            if(isBack)
+            {
+                vertexIndex1 = preresult.first;
+                vertexIndex2 = preresult.second;
+            }
+            else
+            {
+                vertexIndex1 = getRandomBlock(graphH->size());
+                vertexIndex2 = getRandomBlock(graphH->size());
+                preresult = {vertexIndex1, vertexIndex2};
+                //cout << "preresult: " << preresult.first << " " << preresult.second << endl;
+            }
+            
+            if(vertexIndex1 != vertexIndex2)
+            {
+                graphH->swapXVertex(vertexIndex1, vertexIndex2);
+                graphV->swapXVertex(vertexIndex1, vertexIndex2);
+                graphH->swapYVertex(vertexIndex1, vertexIndex2);
+                graphV->swapYVertex(vertexIndex1, vertexIndex2);
+                graphH->maintainH(vertexIndex1, vertexIndex2);
+                graphV->maintainV(vertexIndex1, vertexIndex2);
+            }
             move3count++;
             break;
         }
