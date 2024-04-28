@@ -15,6 +15,8 @@
 
 #include "Block.hpp"
 
+using namespace std;
+
 // Define a structure for vertex properties
 template <class T>
 struct VertexProperty
@@ -57,7 +59,6 @@ private:
     EdgeProperty<U> emptyEdgeProperty = EdgeProperty<U>();
     VertexProperty<T> emptyVertexProperty = VertexProperty<T>();
     std::vector<VertexProperty<T>> vertexPropertiesMap; // set every vertex's property(width)
-
 public:
     // Constructor
     HVGraph() {}
@@ -203,17 +204,17 @@ public:
         setVertexProperty(vertex.getId(), property);
     }
 
-    std::set<int> getOutNeighbors(int vertex) const
+    vector<int> getOutNeighbors(int vertex) const
     {
-        std::set<int> neighbors;
+        vector<int> neighbors;
         for (const auto &neighbor : adjacencyList[vertex])
         {
-            neighbors.insert(neighbor.first);
+            neighbors.push_back(neighbor.first);
         }
         return neighbors;
     }
 
-    std::set<int> getOutNeighbors(const Vertex &vertex) const
+    vector<int> getOutNeighbors(const Vertex &vertex) const
     {
         return getOutNeighbors(vertex.getId());
     }
@@ -299,7 +300,7 @@ public:
     int calculateMaxTotalEdgeWeight(int source, int target) const
     {
         // Initialize a vector to store the maximum total edge weight for each vertex
-        std::vector<int> maxWeight(size()+2, numeric_limits<int>::min());
+        std::vector<int> maxWeight(size() + 2, numeric_limits<int>::min());
         maxWeight[source] = 0;
         // Initialize a queue for breadth-first search
         std::queue<int> q;
@@ -446,20 +447,25 @@ public:
     void rotateBlock(int vertex, bool isVertical)
     {
         vertexPropertiesMap[vertex].value->rotate();
+        int width = vertexPropertiesMap[vertex].value->getWidth();
+        int height = vertexPropertiesMap[vertex].value->getHeight();
+        cout << "width: " << width << " height: " << height << endl;
 
         // vertex的width和height對調
         if (isVertical)
         {
-            for (auto &neighbor : getOutNeighbors(vertex))
+            for (int neighbor : getOutNeighbors(vertex))
             {
-                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value->getWidth());
+                adjacencyList[vertex][neighbor] = width;
+                cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
             }
         }
         else
         {
-            for (auto &neighbor : getOutNeighbors(vertex))
+            for (int neighbor : getOutNeighbors(vertex))
             {
-                setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value->getHeight());
+                adjacencyList[vertex][neighbor] = height;
+                cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
             }
         }
     }

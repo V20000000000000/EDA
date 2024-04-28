@@ -7,10 +7,9 @@
 
 using namespace std;
 
-class Block 
+class Block
 {
 private:
-    string name;
     int id;
     int width;
     int height;
@@ -19,85 +18,104 @@ private:
     int weight;
     int nearSource;
     bool isNearSource; // changed from setNearSource
-    float aspectRatio;
     bool isRotated;
     bool isPlaced;
+    string name;
 
 public:
-    Block(int id, int width, int height) : id(id), width(width), height(height), name("Block_" + to_string(id)), aspectRatio((float)width / height), isRotated(false), isPlaced(false), isNearSource(false), nearSource(0) {}
-    Block(){}
-    int getId() 
+    Block(int id, int width, int height) : id(id), width(width), height(height)
+    {
+        x = 0;
+        y = 0;
+        weight = 0;
+        nearSource = 0;
+        isNearSource = false;
+        isRotated = false;
+        isPlaced = false;
+        name = "Block_" + to_string(id);
+    }
+
+    Block() {}
+
+    int getId()
     {
         return id;
     }
 
-    int getWidth() 
+    int getWidth()
     {
         return width;
     }
 
-    int getHeight() 
+    int getHeight()
     {
         return height;
     }
 
-    int getWeight() 
+    int getWeight()
     {
         return weight;
     }
 
-    int getX() 
+    int getX()
     {
         return x;
     }
 
-    int getY() 
+    int getY()
     {
         return y;
     }
 
-    void setHeight(int width) 
+    void setHeight(int width)
     {
         this->height = height;
     }
 
-    void setWidth(int height) 
+    void setWidth(int height)
     {
         this->width = width;
     }
 
-    void setWeight(int weight) 
+    void setWeight(int weight)
     {
         this->weight = weight;
     }
 
-    void setX(int x) 
+    void setX(int x)
     {
         this->x = x;
     }
 
-    void setY(int y) 
+    void setY(int y)
     {
         this->y = y;
     }
 
-    void rotate() 
+    void setIsRotated(bool isRotated)
     {
-        int temp = width;
-        width = height;
-        height = temp;
-        aspectRatio = (float)width / height;
+        this->isRotated = isRotated;
+    }
+
+    void rotate()
+    {
+        swap(width, height);
         isRotated = !isRotated;
     }
 
-    void place(int x, int y) 
+    bool getIsRotated()
+    {
+        return isRotated;
+    }
+
+    void place(int x, int y)
     {
         this->x = x;
         this->y = y;
         isPlaced = true;
     }
 
-    void unplace() 
+    void unplace()
     {
         x = 0;
         y = 0;
@@ -111,25 +129,41 @@ public:
 
     void setIsNearSource(bool test, int wh) // setIsNearSource
     {
-        if (test) 
+        if (test)
         {
-            if(wh == 0){
+            if (wh == 0)
+            {
                 nearSource = width;
-            }else if(wh == 1){
+            }
+            else if (wh == 1)
+            {
                 nearSource = height;
             }
             isNearSource = true;
-        } 
-        else 
+        }
+        else
         {
             nearSource = 0;
             isNearSource = false;
         }
     }
 
-    int getNearSource() 
+    int getNearSource()
     {
         return nearSource;
+    }
+
+    void print()
+    {
+        cout << "Block id: " << id << endl;
+        cout << "Block width: " << width << endl;
+        cout << "Block height: " << height << endl;
+        cout << "Block weight: " << weight << endl;
+        cout << "Block x: " << x << endl;
+        cout << "Block y: " << y << endl;
+        cout << "Block nearSource: " << nearSource << endl;
+        cout << "Block isNearSource: " << isNearSource << endl;
+        cout << "Block isRotated: " << isRotated << endl;
     }
 };
 

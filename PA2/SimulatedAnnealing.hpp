@@ -173,6 +173,16 @@ public:
         graphH->printGraph();
         cout << "Vgraph:" << endl;
         graphV->printGraph();
+
+        // for all vertices
+        cout << "Pointers of rotated blocks:" << endl;
+        for (int i = 0; i < graphH->size(); i++)
+        {
+            if (graphH->getVertexProperty(i).value->getIsRotated())
+            {
+                cout << graphH->getVertexProperty(i).value << endl;
+            }
+        }
     }
 
     HVGraph<Block *, int> *getHorizontalGraph() const
@@ -227,16 +237,33 @@ public:
 
             // 旋轉區塊
             // cout << "rotate a block" << endl;
+            if(vertexIndex == 6)
+            {
+                cout << "vetexIndex: " << vertexIndex << endl;
 
-            graphH->rotateBlock(vertexIndex, 0);
-            graphV->rotateBlock(vertexIndex, 1);
+                cout << "--------------------------" << endl;
+                graphH->printGraph();
+                cout << "--------------------------" << endl;
+                graphV->printGraph();
+                cout << "--------------------------" << endl;
+                
+                graphH->rotateBlock(vertexIndex, 0);
+                graphV->rotateBlock(vertexIndex, 1);
+
+                cout << "--------------------------" << endl;
+                graphH->printGraph();
+                cout << "--------------------------" << endl;
+                graphV->printGraph();
+                cout << "--------------------------" << endl;
+            }
+            
 
             // graphH->recalculateVertexEdgeWeight(vertexIndex, 0);
             // graphV->recalculateVertexEdgeWeight(vertexIndex, 1);
 
             // 顯示block旋轉後的長寬
             // cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value->getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value->getHeight() << endl;
-
+            return;
             move4count++;
             break;
         }
