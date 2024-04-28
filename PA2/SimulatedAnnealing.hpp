@@ -14,6 +14,7 @@
 
 #include "HVgraph.hpp"
 #include "Block.hpp"
+#include "Timer.hpp"
 
 using namespace std;
 
@@ -53,15 +54,18 @@ public:
 
     void run()
     {
+        // Initialize the timer
+        Timer timer;
+        timer.start();
         // Initialize the temperature
         temperature = 10000;
         int step = 0;
 
         // Set cooling rate
-        coolingRate = 0.95;
+        coolingRate = 0.87;
 
-        // Initialize the best cost
-
+        // Initialize the input size
+        int N = graphH->size();
         // Initialize the current cost
         currentCost = 0;
 
@@ -72,8 +76,15 @@ public:
         move4count = 0;
         accpetCount = 0;
         rejectCount = 0;
-
-        P = 7 * graphH->size();
+        // Set the number of iterations
+        if(N > 50)
+        {
+            P = 7 * graphH->size();
+        }
+        else
+        {
+            P = 10 * graphH->size();
+        }
 
         // Get the chip width and height
         //cout << "--------------------------" << endl;
@@ -94,9 +105,15 @@ public:
         cout << "Initial DistV: " << initialDistanceV << endl;
         bestCost = max(initialDistanceH, initialDistanceV);
 
+        bool run = true;
+
         // Loop until the temperature is zero
-        while (temperature > 1)
+        while (temperature > 1 && run)
         {
+            if(timer.elapsed() > 500000)
+            {
+                run = false;
+            }
             for (int i = P; i >= 1; i--)
             {
                 step = step + 1;
@@ -131,7 +148,17 @@ public:
                 }
                 else // If the new solution is worse, accept it with a probability
                 {
-                    double probabilityThreshold = exp(-costDifference / temperature);
+                    double probabilityThreshold;
+                    
+                    //for small input size
+                    if(N < 10 && temperature < 5000)
+                    {
+                        probabilityThreshold = exp(-costDifference / temperature) * temperature / 10000;
+                    }else
+                    {
+                        probabilityThreshold = exp(-costDifference / temperature);
+                    }
+
                     double probability = getRandomProbability();
 
                     if (probability <= probabilityThreshold)
@@ -174,6 +201,7 @@ public:
         cout << "Reject count: " << rejectCount << endl;
         cout << "Step: " << step << endl;
         cout << "--------------------------" << endl;
+        timer.stop();
     }
 
     HVGraph<Block *, int> *getHorizontalGraph() const
@@ -186,7 +214,7 @@ public:
         return graphV;
     }
 
-    void getNewSolution(int operation, pair<int, int> &preresult, bool isBack)
+    inline void getNewSolution(int operation, pair<int, int> &preresult, bool isBack)
     {
         switch (operation)
         {
@@ -279,7 +307,7 @@ public:
                 preresult = {vertexIndex1, vertexIndex2};
                 //cout << "preresult: " << preresult.first << " " << preresult.second << endl;
             }
-            
+
             if(vertexIndex1 != vertexIndex2)
             {
                 graphH->swapXVertex(vertexIndex1, vertexIndex2);
@@ -318,7 +346,7 @@ public:
     }
 };
 
-int getRandomOperation()
+inline int getRandomOperation()
 {
     // 使用當前時間來設置隨機種子，以確保每次程序運行時生成的隨機數都不同
     static std::random_device rd;
@@ -332,7 +360,7 @@ int getRandomOperation()
     return dis(gen);
 }
 
-int getRandomBlock(int numBlock)
+inline int getRandomBlock(int numBlock)
 {
     // 使用當前時間來設置隨機種子，以確保每次程序運行時生成的隨機數都不同
     static std::random_device rd;
@@ -346,7 +374,7 @@ int getRandomBlock(int numBlock)
     return dis(gen);
 }
 
-float getRandomProbability()
+inline float getRandomProbability()
 {
     static std::random_device rd;
     unsigned int seed1, seed2;

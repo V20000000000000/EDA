@@ -431,7 +431,7 @@ public:
     }
 
     // Method to calculate the maximum total edge weight between two vertices
-    int calculateMaxTotalEdgeWeight(int source, int target) const
+    inline int calculateMaxTotalEdgeWeight(int source, int target) const
     {
         // Initialize a vector to store the maximum total edge weight for each vertex
         std::vector<int> maxWeight(size() + 2, numeric_limits<int>::min());
