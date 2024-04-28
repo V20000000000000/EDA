@@ -55,9 +55,9 @@ public:
             int height = graphV->getVertexProperty(i).value->getHeight();
             if (graphH->getVertexProperty(i).value->getIsRotated())
             {
-                cout << graphH->getVertexProperty(i).value << endl;
+                //cout << graphH->getVertexProperty(i).value << endl;
             }
-            cout << "i is rotated: " << graphH->getVertexProperty(i).value->getIsRotated() << endl;
+            //cout << "i is rotated: " << graphH->getVertexProperty(i).value->getIsRotated() << endl;
 
             x1 = x0 + width;
             y1 = y0 + height;
@@ -92,7 +92,7 @@ public:
             y0 = graphV->calculateMaxTotalEdgeWeight(graphV->size(), i);
             int width = graphH->getVertexProperty(i).value->getWidth();
             int height = graphV->getVertexProperty(i).value->getHeight();
-            cout << "Node" << i << ": " << "x0 = " << x0 << ", y0 = " << y0 << " width: " << width << " height: " << height << endl;
+            //cout << "Node" << i << ": " << "x0 = " << x0 << ", y0 = " << y0 << " width: " << width << " height: " << height << endl;
 
             x1 = x0 + width;
             y1 = y0 + height;

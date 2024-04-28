@@ -56,8 +56,8 @@ public:
         randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
         randomPermutation(verticalPermutation);
-        // horizontalPermutation = {1, 2, 5, 3, 4, 6};
-        // verticalPermutation = {4, 2, 1, 5, 6, 3};
+        //horizontalPermutation = {1, 2, 5, 3, 4, 6};
+        //verticalPermutation = {4, 2, 1, 5, 6, 3};
 
         // Container to store pointers to blocks
         // vector<Block *> horizontalBlocksPointers(parser->getNumBlocks() + 2);
@@ -153,12 +153,6 @@ public:
             // s to target
             verticalGraph->addDirectedEdge(s, parser->getNumBlocks() + 1, verticalGraph->getVertexProperty(s).value->getHeight());
         }
-
-        // 印出HorizontalGraph跟VerticalGraph的資料
-        cout << "HorizontalGraph:" << endl;
-        horizontalGraph->printGraph();
-        cout << "VerticalGraph:" << endl;
-        verticalGraph->printGraph();
 
 
         cout << "findMaxDistance:" << endl;

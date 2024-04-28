@@ -109,6 +109,18 @@ public:
         addDirectedEdge(source.getId(), target.getId(), weight);
     }
 
+    void clearEdgeWeight(int vertex)
+    {
+        for (int inNeighbor : getInNeighbors(vertex))
+        {
+            if (inNeighbor != vertex)
+            {
+                adjacencyList[inNeighbor].erase(vertex);
+            }
+        }
+        adjacencyList[vertex].clear();
+    }
+
     // Method to get edge property
     EdgeProperty<U> getEdgeProperty(int source, int target) const
     {
@@ -202,6 +214,128 @@ public:
     void setVertexProperty(const Vertex &vertex, const VertexProperty<T> &property)
     {
         setVertexProperty(vertex.getId(), property);
+    }
+
+    void swapXVertex(int vertex1, int vertex2)
+    {
+        // cout << "--------------" << endl;
+        // cout << "vertex1: " << vertex1 << " vertex2: " << vertex2 << endl;
+        // cout << "vertex1 X: " << getVertexProperty(vertex1).value->getX() << endl;
+        // cout << "vertex2 X: " << getVertexProperty(vertex2).value->getX() << endl;
+
+        int temp = getVertexProperty(vertex1).value->getX();
+        getVertexProperty(vertex1).value->setX(getVertexProperty(vertex2).value->getX());
+        getVertexProperty(vertex2).value->setX(temp);
+        //printGraph();
+
+        clearEdgeWeight(vertex1);
+        clearEdgeWeight(vertex2);
+
+        //printGraph();
+
+        // cout << "Swap X" << endl;
+
+        // cout << "vertex1 X: " << getVertexProperty(vertex1).value->getX() << endl;
+        // cout << "vertex2 X: " << getVertexProperty(vertex2).value->getX() << endl;
+
+        //printGraph();
+        //exit(0);
+    }
+
+    void swapYVertex(int vertex1, int vertex2)
+    {
+        // cout << "--------------" << endl;
+        // cout << "vertex1: " << vertex1 << " vertex2: " << vertex2 << endl;
+        // cout << "vertex1 Y: " << getVertexProperty(vertex1).value->getY() << endl;
+        // cout << "vertex2 Y: " << getVertexProperty(vertex2).value->getY() << endl;
+
+        int temp = getVertexProperty(vertex1).value->getY();
+        getVertexProperty(vertex1).value->setY(getVertexProperty(vertex2).value->getY());
+        getVertexProperty(vertex2).value->setY(temp);
+        //printGraph();
+
+        clearEdgeWeight(vertex1);
+        clearEdgeWeight(vertex2);
+
+        //printGraph();
+
+        // cout << "Swap Y" << endl;
+
+        // cout << "vertex1 Y: " << getVertexProperty(vertex1).value->getY() << endl;
+        // cout << "vertex2 Y: " << getVertexProperty(vertex2).value->getY() << endl;
+
+        //printGraph();
+        //exit(0);
+    }
+
+    void maintainH(int vertex1, int vertex2)
+    {
+        for(int i = 0; i < size(); i++)
+        {
+            if(i != vertex1)
+            {
+                checkAndAddEdgeX(vertex1, i);
+                checkAndAddEdgeX(i, vertex1);
+            }
+            if(i != vertex2)
+            {
+                checkAndAddEdgeX(vertex2, i);
+                checkAndAddEdgeX(i, vertex2);
+            }
+        }
+
+        addDirectedEdge(size(), vertex1, 0);
+        addDirectedEdge(vertex1, size() + 1, getVertexProperty(vertex1).value->getWidth());
+        addDirectedEdge(size(), vertex2, 0);
+        addDirectedEdge(vertex2, size() + 1, getVertexProperty(vertex2).value->getWidth());
+    }
+
+    void maintainV(int vertex1, int vertex2)
+    {
+        for(int i = 0; i < size(); i++)
+        {
+            if(i != vertex1)
+            {
+                checkAndAddEdgeY(vertex1, i);
+                checkAndAddEdgeY(i, vertex1);
+            }
+            if(i != vertex2)
+            {
+                checkAndAddEdgeY(vertex2, i);
+                checkAndAddEdgeY(i, vertex2);
+            }
+        }
+
+        addDirectedEdge(size(), vertex1, 0);
+        addDirectedEdge(vertex1, size() + 1, getVertexProperty(vertex1).value->getHeight());
+        addDirectedEdge(size(), vertex2, 0);
+        addDirectedEdge(vertex2, size() + 1, getVertexProperty(vertex2).value->getHeight());
+    }
+
+    void checkAndAddEdgeX(int s, int t)
+    {
+        int x1 = getVertexProperty(s).value->getX();
+        int y1 = getVertexProperty(s).value->getY();
+        int x2 = getVertexProperty(t).value->getX();
+        int y2 = getVertexProperty(t).value->getY();
+
+        if (x1 < x2 && y1 < y2)
+        {
+            addDirectedEdge(s, t, getVertexProperty(s).value->getWidth());
+        }
+    }
+
+    void checkAndAddEdgeY(int s, int t)
+    {
+        int x1 = getVertexProperty(s).value->getX();
+        int y1 = getVertexProperty(s).value->getY();
+        int x2 = getVertexProperty(t).value->getX();
+        int y2 = getVertexProperty(t).value->getY();
+
+        if (x1 > x2 && y1 < y2)
+        {
+            addDirectedEdge(s, t, getVertexProperty(s).value->getHeight());
+        }
     }
 
     vector<int> getOutNeighbors(int vertex) const
@@ -449,23 +583,23 @@ public:
         vertexPropertiesMap[vertex].value->rotate();
         int width = vertexPropertiesMap[vertex].value->getWidth();
         int height = vertexPropertiesMap[vertex].value->getHeight();
-        cout << "width: " << width << " height: " << height << endl;
+        //cout << "width: " << width << " height: " << height << endl;
 
         // vertex的width和height對調
         if (isVertical)
         {
             for (int neighbor : getOutNeighbors(vertex))
             {
-                adjacencyList[vertex][neighbor] = width;
-                cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
+                adjacencyList[vertex][neighbor] = height;
+                //cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
             }
         }
         else
         {
             for (int neighbor : getOutNeighbors(vertex))
             {
-                adjacencyList[vertex][neighbor] = height;
-                cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
+                adjacencyList[vertex][neighbor] = width;
+                //cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
             }
         }
     }

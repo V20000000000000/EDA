@@ -40,8 +40,10 @@ private:
     int accpetCount;
     int rejectCount;
     int P;
+    int preoperation;
     HVGraph<Block *, int> *graphH;
     HVGraph<Block *, int> *graphV;
+    pair<int, int> preresult;
 
 public:
     // Constructor
@@ -56,7 +58,7 @@ public:
         int step = 0;
 
         // Set cooling rate
-        coolingRate = 0.85;
+        coolingRate = 0.95;
 
         // Initialize the best cost
 
@@ -71,18 +73,18 @@ public:
         accpetCount = 0;
         rejectCount = 0;
 
-        P = 1 * graphH->size();
+        P = 7 * graphH->size();
 
         // Get the chip width and height
-        cout << "--------------------------" << endl;
+        //cout << "--------------------------" << endl;
         MaxDistanceH = graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size() + 1);
         MaxDistanceV = graphV->calculateMaxTotalEdgeWeight(graphV->size(), graphV->size() + 1);
-        cout << "--------------------------" << endl;
-        cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
-        cout << "--------------------------" << endl;
+        // cout << "--------------------------" << endl;
+        // cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
+        // cout << "--------------------------" << endl;
 
-        int preDistH = MaxDistanceH;
-        int preDistV = MaxDistanceV;
+        // int preDistH = MaxDistanceH;
+        // int preDistV = MaxDistanceV;
 
         // Initialize the best cost
         initialCost = max(MaxDistanceH, MaxDistanceV);
@@ -97,17 +99,20 @@ public:
         {
             for (int i = P; i >= 1; i--)
             {
-                preDistH = MaxDistanceH;
-                preDistV = MaxDistanceV;
+                step = step + 1;
+                //preDistH = MaxDistanceH;
+                //preDistV = MaxDistanceV;
+                
                 // cout << "preDistH: " << preDistH << " ";
                 // cout << "preDistV: " << preDistV << endl;
 
                 // random select a operation
                 int operation = getRandomOperation();
+                //cout << "Operation: " << operation << endl;
                 
                 // Create a new solution
                 // cout << "Operation: " << operation << endl;
-                getNewSolution(operation);
+                getNewSolution(operation, preresult, false);
 
                 // Calculate the cost of the new solution
                 // update the MaxDistanceH and MaxDistanceV
@@ -137,23 +142,22 @@ public:
                     }
                     else
                     {
-                        // cout << "hi" << endl;
-                        getNewSolution(operation); // Back to the original solution
-                        MaxDistanceH = preDistH;
-                        MaxDistanceV = preDistV;
-                        // cout << "reject" << endl;
+                        //cout << "preresult: " << preresult.first << " " << preresult.second << endl;
+                        //cout << "operation: " << operation << endl;
+                        getNewSolution(operation, preresult, true); // Back to the original solution
+                        //cout << "reject" << endl;
                         rejectCount++;
                     }
                 }
                 // cout << endl;
                 // If the new solution is the best, update the best solution
+                //cout << "--------------------------" << endl;
             }
-            step = step + 1;
             // Cool the temperature
             cout << "step: " << step << " ";
             cout << "Best solution: " << bestCost << endl;
             // cout << "Temperature: " << temperature << endl;
-            cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
+            //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
             temperature = temperature * coolingRate;
         }
 
@@ -161,28 +165,15 @@ public:
         cout << "Initial solution: " << initialCost << endl;
         cout << "DistanceH: " << initialDistanceH << " DistanceV: " << initialDistanceV << endl;
         cout << "Best solution: " << bestCost << endl;
-        cout << "DistanceH: " << MaxDistanceH << " DistanceV: " << MaxDistanceV << endl;
+        cout << "DistanceH: " << graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size()+1) << " DistanceV: " << graphV->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size()+1) << endl;
         cout << "Move1 count: " << move1count << endl;
         cout << "Move2 count: " << move2count << endl;
         cout << "Move3 count: " << move3count << endl;
         cout << "Move4 count: " << move4count << endl;
         cout << "Accept count: " << accpetCount << endl;
         cout << "Reject count: " << rejectCount << endl;
+        cout << "Step: " << step << endl;
         cout << "--------------------------" << endl;
-        cout << "Hgraph:" << endl;
-        graphH->printGraph();
-        cout << "Vgraph:" << endl;
-        graphV->printGraph();
-
-        // for all vertices
-        cout << "Pointers of rotated blocks:" << endl;
-        for (int i = 0; i < graphH->size(); i++)
-        {
-            if (graphH->getVertexProperty(i).value->getIsRotated())
-            {
-                cout << graphH->getVertexProperty(i).value << endl;
-            }
-        }
     }
 
     HVGraph<Block *, int> *getHorizontalGraph() const
@@ -195,7 +186,7 @@ public:
         return graphV;
     }
 
-    void getNewSolution(int operation)
+    void getNewSolution(int operation, pair<int, int> &preresult, bool isBack)
     {
         switch (operation)
         {
@@ -204,6 +195,34 @@ public:
         {
             // 在水平序列中交換兩個區塊的代碼
             // cout << "swap two blocks only in X" << endl;
+            int vertexIndex1, vertexIndex2;
+            if(isBack)
+            {
+                vertexIndex1 = preresult.first;
+                vertexIndex2 = preresult.second;
+            }
+            else
+            {
+                vertexIndex1 = getRandomBlock(graphH->size());
+                vertexIndex2 = getRandomBlock(graphH->size());
+                preresult = {vertexIndex1, vertexIndex2};
+                //cout << "preresult: " << preresult.first << " " << preresult.second << endl;
+            }
+            //cout << "vertexIndex1: " << vertexIndex1 << " vertexIndex2: " << vertexIndex2 << endl;
+            //cout << "vertexIndex1: " << vertexIndex1 << " vertexIndex2: " << vertexIndex2 << endl;
+            if(vertexIndex1 != vertexIndex2)
+            {
+                //cout << "Before clear" << graphH->getEdgeWeight(0, 4) << endl;
+                graphH->swapXVertex(vertexIndex1, vertexIndex2);
+                graphV->swapXVertex(vertexIndex1, vertexIndex2);
+                graphH->maintainH(vertexIndex1, vertexIndex2);
+                graphV->maintainV(vertexIndex1, vertexIndex2);
+
+                //cout << "After clear" << graphH->getEdgeWeight(0, 4) << endl;
+                //cout << "--------------------------" << endl;
+                
+            }
+            
             move1count++;
             break;
         }
@@ -213,6 +232,31 @@ public:
         {
             // 在垂直序列中交換兩個區塊的代碼
             // cout << "swap two blocks only in Y" << endl;
+            int vertexIndex1, vertexIndex2;
+            if(isBack)
+            {
+                vertexIndex1 = preresult.first;
+                vertexIndex2 = preresult.second;
+            }
+            else
+            {
+                vertexIndex1 = getRandomBlock(graphH->size());
+                vertexIndex2 = getRandomBlock(graphH->size());
+                preresult = {vertexIndex1, vertexIndex2};
+                //cout << "preresult: " << preresult.first << " " << preresult.second << endl;
+            }
+            //cout << "vertexIndex1: " << vertexIndex1 << " vertexIndex2: " << vertexIndex2 << endl;
+            if(vertexIndex1 != vertexIndex2)
+            {
+                //cout << "Before clear" << graphH->getEdgeWeight(0, 4) << endl;
+                graphH->swapYVertex(vertexIndex1, vertexIndex2);
+                graphV->swapYVertex(vertexIndex1, vertexIndex2);
+                graphH->maintainH(vertexIndex1, vertexIndex2);
+                graphV->maintainV(vertexIndex1, vertexIndex2);
+
+                //cout << "After clear" << graphH->getEdgeWeight(0, 4) << endl;
+                //cout << "--------------------------" << endl;
+            }
             move2count++;
             break;
         }
@@ -230,40 +274,20 @@ public:
         case 3:
         {
             // 隨機選擇一個頂點的索引
-            int vertexIndex = getRandomBlock(graphH->size());
-
-            // 顯示block原本的長寬
-            // cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value->getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value->getHeight() << endl;
-
-            // 旋轉區塊
-            // cout << "rotate a block" << endl;
-            if(vertexIndex == 6)
+            int vertexIndex;
+            if(isBack)
             {
-                cout << "vetexIndex: " << vertexIndex << endl;
-
-                cout << "--------------------------" << endl;
-                graphH->printGraph();
-                cout << "--------------------------" << endl;
-                graphV->printGraph();
-                cout << "--------------------------" << endl;
-                
-                graphH->rotateBlock(vertexIndex, 0);
-                graphV->rotateBlock(vertexIndex, 1);
-
-                cout << "--------------------------" << endl;
-                graphH->printGraph();
-                cout << "--------------------------" << endl;
-                graphV->printGraph();
-                cout << "--------------------------" << endl;
+                vertexIndex = preresult.first;
             }
-            
-
-            // graphH->recalculateVertexEdgeWeight(vertexIndex, 0);
-            // graphV->recalculateVertexEdgeWeight(vertexIndex, 1);
-
-            // 顯示block旋轉後的長寬
-            // cout << "Block_" << vertexIndex << " width: " << graphH->getVertexProperty(vertexIndex).value->getWidth() << " height: " << graphV->getVertexProperty(vertexIndex).value->getHeight() << endl;
-            return;
+            else
+            {
+                vertexIndex = getRandomBlock(graphH->size());
+                preresult = {vertexIndex, 0};
+                //cout << "preresult: " << preresult.first << " " << preresult.second << endl;
+            }
+            //cout << "vertexIndex: " << preresult.first << endl;
+            graphH->rotateBlock(vertexIndex, 0);
+            graphV->rotateBlock(vertexIndex, 1);
             move4count++;
             break;
         }

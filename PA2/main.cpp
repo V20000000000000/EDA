@@ -53,11 +53,11 @@ int main(int argc, char *argv[])
 
     //---------------------------------------------
 
-    // // Simulated Annealing
-    // cout << "Simulated Annealing Start" << endl;
-    // SimulatedAnnealing simulatedAnnealing(horizontalGraph, verticalGraph);
-    // simulatedAnnealing.run();
-    // cout << "Simulated Annealing End" << endl;
+    // Simulated Annealing
+    cout << "Simulated Annealing Start" << endl;
+    SimulatedAnnealing simulatedAnnealing(horizontalGraph, verticalGraph);
+    simulatedAnnealing.run();
+    cout << "Simulated Annealing End" << endl;
 
     // HVGraph<Block *, int> *hGraph = simulatedAnnealing.getHorizontalGraph();
     // HVGraph<Block *, int> *vGraph = simulatedAnnealing.getVerticalGraph();
@@ -75,23 +75,23 @@ int main(int argc, char *argv[])
     // }
     // cout << endl;
 
-    cout << string(50, '-') << endl;
-    cout << "Print HGraph" << endl;
-    horizontalGraph->printGraph();
-    cout << "Print VGraph" << endl;
-    verticalGraph->printGraph();
-    cout << string(50, '-') << endl;
+    // cout << string(50, '-') << endl;
+    // cout << "Print HGraph" << endl;
+    // horizontalGraph->printGraph();
+    // cout << "Print VGraph" << endl;
+    // verticalGraph->printGraph();
+    // cout << string(50, '-') << endl;
 
     // rotate the 7th block
-    horizontalGraph->rotateBlock(6, false);
-    verticalGraph->rotateBlock(6, true);
+    // horizontalGraph->rotateBlock(6, false);
+    // verticalGraph->rotateBlock(6, true);
 
-    cout << string(50, '-') << endl;
-    cout << "Print HGraph" << endl;
-    horizontalGraph->printGraph();
-    cout << "Print VGraph" << endl;
-    verticalGraph->printGraph();
-    cout << string(50, '-') << endl;
+    // cout << string(50, '-') << endl;
+    // cout << "Print HGraph" << endl;
+    // horizontalGraph->printGraph();
+    // cout << "Print VGraph" << endl;
+    // verticalGraph->printGraph();
+    // cout << string(50, '-') << endl;
 
     cout << "Generate Output" << endl;
 
