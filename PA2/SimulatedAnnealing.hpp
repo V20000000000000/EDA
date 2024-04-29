@@ -114,12 +114,6 @@ public:
             {
                 run = false;
             }
-
-            if (accpetCount > N)
-            {
-                run = false;
-            }
-            
             for (int i = P; i >= 1; i--)
             {
                 step = step + 1;
