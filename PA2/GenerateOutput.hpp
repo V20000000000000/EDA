@@ -28,7 +28,7 @@ public:
     }
 
     // generate output.txt
-    void generateOutputFile(string &outputFileName)
+    void generateOutputFile(string &outputFileName, vector<string> blockNameList)
     {
         ofstream outputFile(outputFileName);
         if (!outputFile.is_open())
@@ -61,7 +61,7 @@ public:
 
             x1 = x0 + width;
             y1 = y0 + height;
-            outputFile << "Block_" + to_string(i) << " ";
+            outputFile << blockNameList[i] << " ";
             outputFile << width << " " << height << " " << x0 << " " << y0 << " " << x1 << " " << y1 << endl;
         }
     }

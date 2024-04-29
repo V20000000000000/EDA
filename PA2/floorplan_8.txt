@@ -1,0 +1,13 @@
+NumBlocks 8
+MinAspectRatio 0.5
+MaxAspectRatio 2
+b0 3 3
+b1 2 2
+bl2 3 3
+b3 1 1
+b4 2 2
+b5 2 2
+b6 8 5
+b7 10 2
+
+

@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <map>
+#include <utility>
 
 using namespace std;
 
@@ -16,7 +17,8 @@ class InputDataParse
         int numBlocks;
         float minAspectRatio;
         float maxAspectRatio;
-        vector<map<string, vector<int>>> blocksList; // Store block dimensions
+        vector<pair<int, int>> blocksList; // Store block dimensions
+        vector<string> blockNamesList; // Store block names
 
         InputDataParse(string inputFileName)    // Constructor
         {
@@ -56,25 +58,21 @@ class InputDataParse
                     }
                     else    // Read block dimensions
                     {
-                        string prefix = inputLine.substr(0, 5);
-                        if (prefix == "block")
-                        {
                             int numX, numY;
                             string x, y;
-                            map<string, vector<int>> block;
                             ss >> x >> y;
                             numX = stoi(x);
                             numY = stoi(y);
-                            block[token].push_back(numX); // Add block dimensions to block map
-                            block[token].push_back(numY);
-                            blocksList.push_back(block);
-                        }
+                            blocksList.push_back(make_pair(numX, numY));
+                            blockNamesList.push_back(token);
+                    
                     }
                 }
             }
             inputFile.close();
             cout << "finish initialSolution of " << inputFileName << endl;
         };
+
         ~InputDataParse(){}; // Destructor
 
         int getNumBlocks()
@@ -92,7 +90,7 @@ class InputDataParse
             return maxAspectRatio;
         };
 
-        vector<map<string, vector<int>>> getBlocksList() 
+        vector<pair<int, int>> getBlocksList() 
         {
             return blocksList;
             /*
@@ -106,7 +104,21 @@ class InputDataParse
             */
         }
 
-        map<string, vector<int>> getBlock(int index)
+        vector<string> getBlocksNameList() 
+        {
+            return blockNamesList;
+            /*
+            for (const auto& block : blocksList) 
+            {
+                for (const auto& pair : block) 
+                {
+                    cout << pair.first << " " << pair.second[0] << " " << pair.second[1] << std::endl;
+                }
+            }
+            */
+        }
+
+        pair<int, int> getBlock(int index)
         {
             return blocksList[index];
             /*
@@ -122,7 +134,7 @@ class InputDataParse
 
         int getBlockWidth(int index)
         {
-            return blocksList[index]["block_" + to_string(index)][0];
+            return blocksList[index].first;
             /*
                 for (const auto& pair : blocksList[index]) 
                 {
@@ -137,7 +149,7 @@ class InputDataParse
 
         int getBlockHeight(int index)
         {
-            return blocksList[index]["block_" + to_string(index)][1];
+            return blocksList[index].second;
             /*
                 for (const auto& pair : blocksList[index]) 
                 {

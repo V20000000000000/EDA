@@ -203,6 +203,11 @@ public:
     {
         return verticalGraph;
     }
+
+    vector<string> getBlockNameList() const
+    {
+        return parser->getBlocksNameList();
+    }
 };
 
 void randomPermutation(vector<int> &Permutation)

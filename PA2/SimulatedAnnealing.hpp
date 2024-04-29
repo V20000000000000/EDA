@@ -149,15 +149,15 @@ public:
                 else // If the new solution is worse, accept it with a probability
                 {
                     double probabilityThreshold;
-                    
-                    //for small input size
-                    if(N < 10 && temperature < 5000)
-                    {
-                        probabilityThreshold = exp(-costDifference / temperature) * temperature / 10000;
-                    }else
-                    {
-                        probabilityThreshold = exp(-costDifference / temperature);
-                    }
+                    probabilityThreshold = exp(-costDifference / temperature);
+                    // //for small input size
+                    // if(N < 10 && temperature < 3000)
+                    // {
+                    //     probabilityThreshold = exp(-costDifference / temperature) * temperature / 3000;
+                    // }else
+                    // {
+                    //     probabilityThreshold = exp(-costDifference / temperature);
+                    // }
 
                     double probability = getRandomProbability();
 

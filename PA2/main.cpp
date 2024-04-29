@@ -4,6 +4,7 @@
 #include <string>
 #include <tuple>
 #include <set>
+#include <vector>
 #include "InputDataParse.hpp"
 #include "HVGraph.hpp"
 #include "InitialSolution.hpp"
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
     cout << "initialSolution" << endl;
     // Process input file
     InitialSolution initialSolution(arg1);
+    vector<string> blockNameList = initialSolution.getBlockNameList();
     cout << "finish initialSolution" << endl;
 
     //---------------------------------------------
@@ -97,7 +99,7 @@ int main(int argc, char *argv[])
 
     GenerateOutput generateOutput(horizontalGraph, verticalGraph);
     cout << arg2 << endl;
-    generateOutput.generateOutputFile(arg2);
+    generateOutput.generateOutputFile(arg2, blockNameList);
 
     cout << "Complete!" << endl;
     cout << "Time: " << timer.stop() << " ms" << endl;
