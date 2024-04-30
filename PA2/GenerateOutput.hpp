@@ -14,31 +14,22 @@ using namespace std;
 class GenerateOutput
 {
 private:
-    HVGraph<Block, int> graphH;
-    HVGraph<Block, int> graphV;
+    HVGraph<Block *, int> *graphH;
+    HVGraph<Block *, int> *graphV;
 
 public:
-    GenerateOutput(HVGraph<Block, int> graph1, HVGraph<Block, int> graph2) : graphH(graph1), graphV(graph2)
+    GenerateOutput(HVGraph<Block *, int> *graph1, HVGraph<Block *, int> *graph2) : graphH(graph1), graphV(graph2)
     {
         // graphH -> rotateBlock(6);
         // graphV -> rotateBlock(6);
 
         // graphH -> recalculateVertexEdgeWeight(6, 0);
         // graphV -> recalculateVertexEdgeWeight(6, 1);
-        cout << "GenerateOutput constructor" << endl;
-        cout << "getWidth" << graphH.getVertexProperty(5).value.getWidth() << endl;
-        cout << "source" << endl;
-        cout << graph1.getEdgeWeight(5, 11) << endl;
-        cout << graph1.getEdgeWeight(10, 5) << endl;
-        cout << graph1.size();
-        cout << endl;
-    }   
-
+    }
 
     // generate output.txt
-    void generateOutputFile(string &outputFileName, vector<string> blockNameList)
+    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, vector<int> coordinateY, int distH, int distV)
     {
-        cout << "test" << endl;
         ofstream outputFile(outputFileName);
         if (!outputFile.is_open())
         {
@@ -48,23 +39,20 @@ public:
 
         int chipWidth, chipHeight;
 
-        chipWidth = graphH.calculateMaxTotalEdgeWeight(graphH.size(), graphH.size() + 1);
-        chipHeight = graphV.calculateMaxTotalEdgeWeight(graphV.size(), graphV.size() + 1);
-        cout << "Chip width: " << chipWidth << endl;
-        cout << "Chip height: " << chipHeight << endl;
+        chipWidth = distH;
+        chipHeight = distV;
+        cout << "Chip width: " << distH << endl;
+        cout << "Chip height: " << distV << endl;
 
         outputFile << chipWidth << " " << chipHeight << endl;
 
-        for (int i = 0; i < graphH.size(); i++)
+        for (int i = 0; i < graphH->size(); i++)
         {
             int x0, y0, x1, y1;
-            x0 = graphH.calculateMaxTotalEdgeWeight(graphH.size(), i);
-            y0 = graphV.calculateMaxTotalEdgeWeight(graphV.size(), i);
-            int width = graphH.getVertexProperty(i).value.getWidth();
-            int height = graphV.getVertexProperty(i).value.getHeight();
-
-            cout << "x0: " << x0 << " " << "y0" << y0 << endl;
-
+            x0 = coordinateX[i];
+            y0 = coordinateY[i];
+            int width = graphH->getVertexProperty(i).value->getWidth();
+            int height = graphV->getVertexProperty(i).value->getHeight();
             x1 = x0 + width;
             y1 = y0 + height;
             outputFile << blockNameList[i] << " ";

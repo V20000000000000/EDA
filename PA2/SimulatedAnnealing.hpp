@@ -49,14 +49,14 @@ private:
     int preoperation;
     HVGraph<Block *, int> *graphH;
     HVGraph<Block *, int> *graphV;
-    HVGraph<Block , int> bestgraphH;
-    HVGraph<Block , int> bestgraphV;
+    vector<int> coordinateX;
+    vector<int> coordinateY;
 
     pair<int, int> preresult;
 
 public:
     // Constructor
-    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), bestgraphH(graphH->size()+2), bestgraphV(graphH->size()+2) {}
+    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), coordinateX(graphH->size()), coordinateY(graphH->size()) {}
     // Destructor
     ~SimulatedAnnealing() {}
 
@@ -343,61 +343,31 @@ public:
 
     void storeGlobalBestGraph()
     {
-        cout << "test" << endl;
         for(int i = 0; i < N; i++)
         {
-            Block tempBlockH(i, graphH->getVertexProperty(i).value->getWidth(),graphH->getVertexProperty(i).value->getHeight());
-            Block tempBlockV(i, graphV->getVertexProperty(i).value->getWidth(),graphV->getVertexProperty(i).value->getHeight());
-            tempBlockH.setX(graphH->getVertexProperty(i).value->getX());
-            tempBlockV.setX(graphV->getVertexProperty(i).value->getX());
-            tempBlockH.setY(graphH->getVertexProperty(i).value->getY());
-            tempBlockV.setY(graphV->getVertexProperty(i).value->getY());
-            bestgraphH.setVertexProperty(i, tempBlockH);
-            bestgraphV.setVertexProperty(i, tempBlockV);
+            coordinateX[i] = graphH->calculateMaxTotalEdgeWeight(N, i);
+            coordinateY[i] = graphV->calculateMaxTotalEdgeWeight(N, i);
         }
-
-        Block sourceBlockH(N, 0, 0);
-        Block targetBlockH(N+1, 0, 0);
-        Block sourceBlockV(N, 0, 0);
-        Block targetBlockV(N+1, 0, 0);
-
-        bestgraphH.setVertexProperty(N, sourceBlockH);
-        bestgraphH.setVertexProperty(N+1, targetBlockH);
-        bestgraphV.setVertexProperty(N, sourceBlockV);
-        bestgraphV.setVertexProperty(N+1, targetBlockV);
-
-        for (int i = 0; i < N; ++i) {
-            // 遍历第 i 个顶点的邻居顶点
-            for (auto neighbor : graphH->getAdjacencyList(i)) {
-                int neighborIndex = neighbor.first;
-                float weight = neighbor.second;
-                bestgraphH.addDirectedEdge(i, neighborIndex, weight);
-            }
-
-            for (auto neighbor : graphV->getAdjacencyList(i)) {
-                int neighborIndex = neighbor.first;
-                float weight = neighbor.second;
-                bestgraphV.addDirectedEdge(i, neighborIndex, weight);
-                //cout << bestgraphH.getEdgeWeight(i, neighborIndex) << endl;
-            }
-
-            bestgraphH.addDirectedEdge(N, i, 0);
-            bestgraphH.addDirectedEdge(i, N+1, graphH->getVertexProperty(i).value->getWidth());
-            bestgraphV.addDirectedEdge(N, i, 0);
-            bestgraphV.addDirectedEdge(i, N+1, graphH->getVertexProperty(i).value->getHeight());
-        }
-
-        
     }
 
-    HVGraph<Block, int> getGraphH()
+    vector<int> getCoordinateX()
     {
-        return bestgraphH;
+        return coordinateX;
     }
 
-    HVGraph<Block, int> getGraphV()
+    vector<int> getCoordinateY()
     {
-        return bestgraphV;
+        return coordinateY;
+    }
+
+    int getGlobalBestH()
+    {
+        return GlobalBestH;
+    }
+
+    int getGlobalBestV()
+    {
+        return GlobalBestV;
     }
 };
 
