@@ -14,11 +14,8 @@ using namespace std;
 class GenerateOutput
 {
 private:
-    HVGraph<Block *, int> *graphH;
-    HVGraph<Block *, int> *graphV;
-
 public:
-    GenerateOutput(HVGraph<Block *, int> *graph1, HVGraph<Block *, int> *graph2) : graphH(graph1), graphV(graph2)
+    GenerateOutput()
     {
         // graphH -> rotateBlock(6);
         // graphV -> rotateBlock(6);
@@ -27,9 +24,12 @@ public:
         // graphV -> recalculateVertexEdgeWeight(6, 1);
     }
 
+    ~GenerateOutput()
+    {
+    }
+
     // generate output.txt
-    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, 
-    vector<int> coordinateY, int distH, int distV, vector<int> blockWidth, vector <int> blockHeight)
+    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, vector<int> coordinateY, int distH, int distV, vector<int> blockWidth, vector <int> blockHeight)
     {
         ofstream outputFile(outputFileName);
         if (!outputFile.is_open())
@@ -47,7 +47,7 @@ public:
 
         outputFile << chipWidth << " " << chipHeight << endl;
 
-        for (int i = 0; i < graphH->size(); i++)
+        for (unsigned int i = 0; i < coordinateX.size(); i++)
         {
             int x0, y0, x1, y1;
             x0 = coordinateX[i];
