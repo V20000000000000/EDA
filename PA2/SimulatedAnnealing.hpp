@@ -77,7 +77,7 @@ public:
         Timer timer;
         timer.start();
         // Initialize the temperature
-        temperature = 200;
+        temperature = 100;
         step = 0;
 
         // Set cooling rate
@@ -121,7 +121,7 @@ public:
         //cout << "temperature" << temperature << endl;
         bool run = true;
         // Loop until the temperature is zero
-        while (temperature > 0.05 && run)
+        while (temperature > 0.1 && run)
         {
             for (int i = P; i >= 1; i--)
             {
