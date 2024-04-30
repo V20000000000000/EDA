@@ -17,15 +17,12 @@ private:
 public:
     GenerateOutput()
     {
-        // graphH -> rotateBlock(6);
-        // graphV -> rotateBlock(6);
-
-        // graphH -> recalculateVertexEdgeWeight(6, 0);
-        // graphV -> recalculateVertexEdgeWeight(6, 1);
+        cout << "GenerateOutput constructor" << endl;
     }
 
     ~GenerateOutput()
     {
+        cout << "GenerateOutput destructor" << endl;
     }
 
     // generate output.txt
@@ -52,13 +49,15 @@ public:
             int x0, y0, x1, y1;
             x0 = coordinateX[i];
             y0 = coordinateY[i];
-            int width = blockWidth[i];
-            int height = blockHeight[i];
+            int width = /*blockWidth[i]*/ 1;
+            int height = /*blockHeight[i]*/ 1;
             x1 = x0 + width;
             y1 = y0 + height;
             outputFile << blockNameList[i] << " ";
             outputFile << width << " " << height << " " << x0 << " " << y0 << " " << x1 << " " << y1 << endl;
         }
+
+        outputFile.close();
     }
 };
 

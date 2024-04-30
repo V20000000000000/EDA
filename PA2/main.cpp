@@ -100,9 +100,8 @@ int main(int argc, char *argv[])
     GenerateOutput generateOutput;
     cout << arg2 << endl;
     generateOutput.generateOutputFile(arg2, blockNameList, simulatedAnnealing.getCoordinateX(), 
-    simulatedAnnealing.getCoordinateY(), simulatedAnnealing.getGlobalBestH(),simulatedAnnealing.getGlobalBestV(),
-    simulatedAnnealing.getBlockWidth(), simulatedAnnealing.getBlockHeight()
-    );
+    simulatedAnnealing.getCoordinateY(), simulatedAnnealing.getGlobalBestH(),simulatedAnnealing.getGlobalBestV()
+    , simulatedAnnealing.getBlockWidth(), simulatedAnnealing.getBlockHeight());
 
 
 

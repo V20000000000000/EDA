@@ -58,13 +58,20 @@ private:
 
 public:
     // Constructor
-    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), coordinateX(graphH->size()), coordinateY(graphH->size()) {}
+    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), coordinateX(graphH->size()), coordinateY(graphH->size())
+    {
+        cout << "SimulatedAnnealing constructor" << endl;
+    }
     // Destructor
-    ~SimulatedAnnealing() {}
+    ~SimulatedAnnealing() 
+    {
+        cout << "SimulatedAnnealing destructor" << endl;
+    }
 
     void run()
     {
         // Initialize the timer
+        //ofstream outputLogFile("log.txt");
         Timer timer;
         timer.start();
         // Initialize the temperature
@@ -109,14 +116,14 @@ public:
         cout << "Initial DistV: " << initialDistanceV << endl;
         bestCost = max(initialDistanceH, initialDistanceV);
         GlobalBestCost = bestCost;
-        cout << "test" << endl;
+        cout << "temperature" << temperature << endl;
         bool run = true;
-        ofstream outputFile("log.txt");
         // Loop until the temperature is zero
         while (temperature > 1 && run)
         {
             for (int i = P; i >= 1; i--)
             {
+                cout << "Temperature: " << temperature << " ";
                 if(timer.elapsed() > 500000)
                 {
                     run = false;
@@ -185,8 +192,8 @@ public:
             // Cool the temperature
             cout << "step: " << step << " ";
             cout << "Best solution: " << GlobalBestCost << endl;
-            outputFile << "step: " << step << " ";
-            outputFile << "Best solution: " << GlobalBestCost << endl;
+            //outputLogFile << "step: " << step << " ";
+            //outputLogFile << "Best solution: " << GlobalBestCost << endl;
             // cout << "Temperature: " << temperature << endl;
             //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
             temperature = temperature * coolingRate;
@@ -205,11 +212,11 @@ public:
         cout << "Reject count: " << rejectCount << endl;
         cout << "Step: " << step << endl;
         cout << "--------------------------" << endl;
-        outputFile.close();
+        //outputLogFile.close();
         timer.stop();
     }
 
-    inline void getNewSolution(int operation, pair<int, int> &preresult, bool isBack)
+    void getNewSolution(int operation, pair<int, int> &preresult, bool isBack)
     {
         switch (operation)
         {
