@@ -51,6 +51,8 @@ private:
     HVGraph<Block *, int> *graphV;
     vector<int> coordinateX;
     vector<int> coordinateY;
+    vector<int> blockWidth;
+    vector<int> blockHeight;
 
     pair<int, int> preresult;
 
@@ -107,7 +109,7 @@ public:
         cout << "Initial DistV: " << initialDistanceV << endl;
         bestCost = max(initialDistanceH, initialDistanceV);
         GlobalBestCost = bestCost;
-
+        cout << "test" << endl;
         bool run = true;
         ofstream outputFile("log.txt");
         // Loop until the temperature is zero
@@ -146,9 +148,6 @@ public:
                 //store globalbest solution
                 if(currentCost < GlobalBestCost)
                 {
-                    GlobalBestCost = currentCost;
-                    GlobalBestH = MaxDistanceH;
-                    GlobalBestV = MaxDistanceV;
                     storeGlobalBestGraph();
                 }
 
@@ -343,10 +342,15 @@ public:
 
     void storeGlobalBestGraph()
     {
+        GlobalBestCost = currentCost;
+        GlobalBestH = MaxDistanceH;
+        GlobalBestV = MaxDistanceV;
         for(int i = 0; i < N; i++)
         {
             coordinateX[i] = graphH->calculateMaxTotalEdgeWeight(N, i);
             coordinateY[i] = graphV->calculateMaxTotalEdgeWeight(N, i);
+            blockWidth[i] = graphH->getVertexProperty(i).value->getWidth();
+            blockHeight[i] = graphV->getVertexProperty(i).value->getHeight();
         }
     }
 
@@ -358,6 +362,16 @@ public:
     vector<int> getCoordinateY()
     {
         return coordinateY;
+    }
+
+    vector<int> getBlockWidth()
+    {
+        return blockWidth;
+    }
+
+    vector<int> getBlockHeight()
+    {
+        return blockHeight;
     }
 
     int getGlobalBestH()

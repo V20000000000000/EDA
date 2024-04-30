@@ -99,8 +99,11 @@ int main(int argc, char *argv[])
 
     GenerateOutput generateOutput(horizontalGraph, verticalGraph);
     cout << arg2 << endl;
+    vector <int> blockWidth = simulatedAnnealing.getBlockWidth();
+    vector <int> blockHeight = simulatedAnnealing.getBlockHeight();
     generateOutput.generateOutputFile(arg2, blockNameList, simulatedAnnealing.getCoordinateX(), 
-    simulatedAnnealing.getCoordinateY(), simulatedAnnealing.getGlobalBestH(), simulatedAnnealing.getGlobalBestV() 
+    simulatedAnnealing.getCoordinateY(), simulatedAnnealing.getGlobalBestH(),simulatedAnnealing.getGlobalBestV(),
+    blockWidth, blockHeight
     );
 
 

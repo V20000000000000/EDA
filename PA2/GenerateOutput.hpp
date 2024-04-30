@@ -28,7 +28,8 @@ public:
     }
 
     // generate output.txt
-    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, vector<int> coordinateY, int distH, int distV)
+    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, 
+    vector<int> coordinateY, int distH, int distV, vector<int> blockWidth, vector <int> blockHeight)
     {
         ofstream outputFile(outputFileName);
         if (!outputFile.is_open())
@@ -51,8 +52,8 @@ public:
             int x0, y0, x1, y1;
             x0 = coordinateX[i];
             y0 = coordinateY[i];
-            int width = graphH->getVertexProperty(i).value->getWidth();
-            int height = graphV->getVertexProperty(i).value->getHeight();
+            int width = blockWidth[i];
+            int height = blockHeight[i];
             x1 = x0 + width;
             y1 = y0 + height;
             outputFile << blockNameList[i] << " ";
