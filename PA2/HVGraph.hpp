@@ -75,6 +75,8 @@ public:
         cout << "finish init HVGraph" << endl;
     }
 
+    ~HVGraph() {}
+
     // Method to add a bidirected edge
     void addBidirectedEdge(int source, int target, float weight1, float weight2)
     {
@@ -459,54 +461,6 @@ public:
         return maxWeight[target];
     }
 
-    // Method to find the the maximum distance in the graph
-    // std::tuple<float, int, int> findMaxDistanceH(set<int> ni, set<int> no) const
-    // {
-    //     float maxDistance = 0;
-    //     int source = 0;
-    //     int target = 0;
-
-    //     for (int i : ni)
-    //     {
-    //         for (int j : no)
-    //         {
-    //             float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value->getWidth();
-    //             if (maxDistance < distance)
-    //             {
-    //                 source = i;
-    //                 target = j;
-    //                 maxDistance = distance;
-    //             }
-    //         }
-    //     }
-
-    //     return std::make_tuple(maxDistance, source, target);
-    // }
-
-    // // Method to find the the maximum distance in the graph
-    // std::tuple<float, int, int> findMaxDistanceV(set<int> ni, set<int> no) const
-    // {
-    //     float maxDistance = 0;
-    //     int source = 0;
-    //     int target = 0;
-
-    //     for (int i : ni)
-    //     {
-    //         for (int j : no)
-    //         {
-    //             float distance = calculateMaxTotalEdgeWeight(i, j) + getVertexProperty(j).value->getHeight();
-    //             if (maxDistance < distance)
-    //             {
-    //                 source = i;
-    //                 target = j;
-    //                 maxDistance = distance;
-    //             }
-    //         }
-    //     }
-
-    //     return std::make_tuple(maxDistance, source, target);
-    // }
-
     // 尋找起點集合
     set<int> getSourceSet() const
     {
@@ -534,48 +488,6 @@ public:
         }
         return targetSet;
     }
-
-    // std::tuple<float, int> findVertexMaxDistance(int target, set<int> ni) const
-    // {
-    //     float maxDistance = 0;
-    //     int source = 0;
-
-    //     for (int i : ni)
-    //     {
-    //         float distance = calculateMaxTotalEdgeWeight(i, target);
-    //         if (maxDistance < distance)
-    //         {
-    //             source = i;
-    //             maxDistance = distance;
-    //         }
-    //     }
-    //     return std::make_tuple(maxDistance, source);
-    // }
-
-    // recaluclate the edgeWeight with specific vertex
-    // void recalculateVertexEdgeWeight(int vertex, bool isVertical) // isVertical = true -> vertical graph
-    // {
-    //     // 改變跟這個vertex輸入的edge的weight
-    //     if (isVertical)
-    //     {
-    //         for (auto &neighbor : getOutNeighbors(vertex))
-    //         {
-    //             setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value->getWidth());
-    //         }
-    //     }
-    //     else
-    //     {
-    //         for (auto &neighbor : getOutNeighbors(vertex))
-    //         {
-    //             setEdgeWeight(vertex, neighbor, vertexPropertiesMap[vertex].value->getHeight());
-    //         }
-    //     }
-    // }
-
-    // void recalculateVertexEdgeWeight(const Vertex &vertex, bool isVertical)
-    // {
-    //     recalculateVertexEdgeWeight(vertex.getId(), isVertical);
-    // }
 
     // Method to rotate the Hblock
     void rotateBlock(int vertex, bool isVertical)

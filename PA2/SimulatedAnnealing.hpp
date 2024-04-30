@@ -62,7 +62,7 @@ public:
         int step = 0;
 
         // Set cooling rate
-        coolingRate = 0.87;
+        coolingRate = 0.85;
 
         // Initialize the input size
         int N = graphH->size();
@@ -77,14 +77,7 @@ public:
         accpetCount = 0;
         rejectCount = 0;
         // Set the number of iterations
-        if(N > 50)
-        {
             P = 7 * graphH->size();
-        }
-        else
-        {
-            P = 10 * graphH->size();
-        }
 
         // Get the chip width and height
         //cout << "--------------------------" << endl;
@@ -108,7 +101,7 @@ public:
         bool run = true;
 
         // Loop until the temperature is zero
-        while (temperature > 1 && run)
+        while (temperature > 0.01 && run)
         {
             if(timer.elapsed() > 500000)
             {
@@ -149,22 +142,15 @@ public:
                 else // If the new solution is worse, accept it with a probability
                 {
                     double probabilityThreshold;
+                    
                     probabilityThreshold = exp(-costDifference / temperature);
-                    // //for small input size
-                    // if(N < 10 && temperature < 3000)
-                    // {
-                    //     probabilityThreshold = exp(-costDifference / temperature) * temperature / 3000;
-                    // }else
-                    // {
-                    //     probabilityThreshold = exp(-costDifference / temperature);
-                    // }
 
                     double probability = getRandomProbability();
 
                     if (probability <= probabilityThreshold)
                     {
                         // Accept the new solution
-                        bestCost = currentCost;
+                        //bestCost = currentCost;
                         accpetCount++;
                     }
                     else
