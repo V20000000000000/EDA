@@ -77,7 +77,7 @@ public:
         Timer timer;
         timer.start();
         // Initialize the temperature
-        temperature = 10000;
+        temperature = 200;
         step = 0;
 
         // Set cooling rate
@@ -121,7 +121,7 @@ public:
         //cout << "temperature" << temperature << endl;
         bool run = true;
         // Loop until the temperature is zero
-        while (temperature > 1 && run)
+        while (temperature > 0.05 && run)
         {
             for (int i = P; i >= 1; i--)
             {
@@ -155,10 +155,22 @@ public:
                 // Calculate the cost difference
                 int costDifference = currentCost - bestCost;
                 //store globalbest solution
-                if(currentCost < GlobalBestCost)
-                {
-                    storeGlobalBestGraph();
-                }
+
+                    if(currentCost < GlobalBestCost)
+                    {
+                        
+                        GlobalBestCost = currentCost;
+                        GlobalBestH = MaxDistanceH;
+                        GlobalBestV = MaxDistanceV;
+
+                        if(N > 50 && temperature > 2)
+                        {
+                            continue;
+                        }else
+                        {
+                            storeGlobalBestGraph();
+                        }
+                    }
 
                 // If the new solution is better, accept it
                 if (currentCost < bestCost)
@@ -192,8 +204,9 @@ public:
                 //cout << "--------------------------" << endl;
             }
             // Cool the temperature
+            storeGlobalBestGraph();
             cout << "step: " << step << " ";
-            cout << "Best solution: " << GlobalBestCost << endl;
+            cout << "Best solution: " << GlobalBestCost << " " << "temperature" << temperature  << endl;
             outputLogFile << "step: " << step << " ";
             outputLogFile << "Best solution: " << GlobalBestCost << endl;
             // cout << "Temperature: " << temperature << endl;
@@ -351,10 +364,6 @@ public:
 
     void storeGlobalBestGraph()
     {
-        GlobalBestCost = currentCost;
-        GlobalBestH = MaxDistanceH;
-        GlobalBestV = MaxDistanceV;
-
         if(step != 0)
         {
             for(int i = 0; i < N; i++)
@@ -365,7 +374,6 @@ public:
                 blockHeight[i] = graphV->getVertexProperty(i).value->getHeight();
             }
         }
-        
     }
 
     vector<int> getCoordinateX()
