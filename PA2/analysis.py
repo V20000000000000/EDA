@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 # Read data from the text file
-with open('data.txt', 'r') as file:
+with open('log.txt', 'r') as file:
     lines = file.readlines()
 
 # Extracting steps and solutions from the lines

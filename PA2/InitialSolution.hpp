@@ -53,9 +53,9 @@ public:
         }
         cout << "parser.getNumBlocks(): " << parser->getNumBlocks() << endl;
         // 隨機排列 block水平順序(向量中的值是index block的水平x位置)
-        randomPermutation(horizontalPermutation);
+        //randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
-        randomPermutation(verticalPermutation);
+        //randomPermutation(verticalPermutation);
         //horizontalPermutation = {1, 2, 5, 3, 4, 6};
         //verticalPermutation = {4, 2, 1, 5, 6, 3};
 

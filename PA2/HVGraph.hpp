@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cassert>
 #include <limits>
+#include <unordered_set>
 
 #include "Block.hpp"
 
@@ -355,9 +356,9 @@ public:
         return getOutNeighbors(vertex.getId());
     }
 
-    std::set<int> getInNeighbors(int vertex) const
+    std::unordered_set<int> getInNeighbors(int vertex) const
     {
-        std::set<int> neighbors;
+        std::unordered_set<int> neighbors;
         for (int i = 0; i < size(); ++i)
         {
             auto it = adjacencyList[i].find(vertex);
@@ -369,7 +370,7 @@ public:
         return neighbors;
     }
 
-    std::set<int> getInNeighbors(const Vertex &vertex) const
+    std::unordered_set<int> getInNeighbors(const Vertex &vertex) const
     {
         return getInNeighbors(vertex.getId());
     }
@@ -462,9 +463,9 @@ public:
     }
 
     // 尋找起點集合
-    set<int> getSourceSet() const
+    unordered_set<int> getSourceSet() const
     {
-        set<int> sourceSet;
+        unordered_set<int> sourceSet;
         for (int i = 0; i < size(); i++)
         {
             if (getInNeighbors(i).empty())
@@ -476,9 +477,9 @@ public:
     }
 
     // 尋找終點集合
-    set<int> getTargetSet() const
+    unordered_set<int> getTargetSet() const
     {
-        set<int> targetSet;
+        unordered_set<int> targetSet;
         for (int i = 0; i < size(); i++)
         {
             if (getOutNeighbors(i).empty())
@@ -514,6 +515,11 @@ public:
                 //cout << vertex << ": " << neighbor << "(" << adjacencyList[vertex][neighbor] << ")" << endl;
             }
         }
+    }
+
+    std::map<int, float> getAdjacencyList(int i)
+    {
+        return adjacencyList[i];
     }
 
     void rotateBlock(const Vertex &vertex, bool isVertical)

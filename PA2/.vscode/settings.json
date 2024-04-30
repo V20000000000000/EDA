@@ -52,7 +52,9 @@
         "xutility": "cpp",
         "deque": "cpp",
         "queue": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "unordered_set": "cpp",
+        "stack": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

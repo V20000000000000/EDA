@@ -11,6 +11,7 @@
 #include <tuple>
 #include <algorithm>
 #include <chrono>
+#include <fstream>
 
 #include "HVgraph.hpp"
 #include "Block.hpp"
@@ -31,8 +32,11 @@ private:
     int MaxDistanceV;
     int initialDistanceH;
     int initialDistanceV;
+    int GlobalBestH;
+    int GlobalBestV;
     int initialCost;
     int bestCost;
+    int GlobalBestCost;
     int currentCost;
     int move1count;
     int move2count;
@@ -41,14 +45,18 @@ private:
     int accpetCount;
     int rejectCount;
     int P;
+    int N;
     int preoperation;
     HVGraph<Block *, int> *graphH;
     HVGraph<Block *, int> *graphV;
+    HVGraph<Block , int> bestgraphH;
+    HVGraph<Block , int> bestgraphV;
+
     pair<int, int> preresult;
 
 public:
     // Constructor
-    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV) {}
+    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), bestgraphH(graphH->size()+2), bestgraphV(graphH->size()+2) {}
     // Destructor
     ~SimulatedAnnealing() {}
 
@@ -65,7 +73,7 @@ public:
         coolingRate = 0.85;
 
         // Initialize the input size
-        int N = graphH->size();
+        N = graphH->size();
         // Initialize the current cost
         currentCost = 0;
 
@@ -77,7 +85,8 @@ public:
         accpetCount = 0;
         rejectCount = 0;
         // Set the number of iterations
-            P = 7 * graphH->size();
+        P = 7 * N;
+        
 
         // Get the chip width and height
         //cout << "--------------------------" << endl;
@@ -97,18 +106,19 @@ public:
         cout << "Initial DistH: " << initialDistanceH << endl;
         cout << "Initial DistV: " << initialDistanceV << endl;
         bestCost = max(initialDistanceH, initialDistanceV);
+        GlobalBestCost = bestCost;
 
         bool run = true;
-
+        ofstream outputFile("log.txt");
         // Loop until the temperature is zero
-        while (temperature > 0.01 && run)
+        while (temperature > 1 && run)
         {
-            if(timer.elapsed() > 500000)
-            {
-                run = false;
-            }
             for (int i = P; i >= 1; i--)
             {
+                if(timer.elapsed() > 500000)
+                {
+                    run = false;
+                }
                 step = step + 1;
                 //preDistH = MaxDistanceH;
                 //preDistV = MaxDistanceV;
@@ -133,6 +143,14 @@ public:
 
                 // Calculate the cost difference
                 int costDifference = currentCost - bestCost;
+                //store globalbest solution
+                if(currentCost < GlobalBestCost)
+                {
+                    GlobalBestCost = currentCost;
+                    GlobalBestH = MaxDistanceH;
+                    GlobalBestV = MaxDistanceV;
+                    storeGlobalBestGraph();
+                }
 
                 // If the new solution is better, accept it
                 if (currentCost < bestCost)
@@ -142,7 +160,6 @@ public:
                 else // If the new solution is worse, accept it with a probability
                 {
                     double probabilityThreshold;
-                    
                     probabilityThreshold = exp(-costDifference / temperature);
 
                     double probability = getRandomProbability();
@@ -150,7 +167,7 @@ public:
                     if (probability <= probabilityThreshold)
                     {
                         // Accept the new solution
-                        //bestCost = currentCost;
+                        bestCost = currentCost;
                         accpetCount++;
                     }
                     else
@@ -168,7 +185,9 @@ public:
             }
             // Cool the temperature
             cout << "step: " << step << " ";
-            cout << "Best solution: " << bestCost << endl;
+            cout << "Best solution: " << GlobalBestCost << endl;
+            outputFile << "step: " << step << " ";
+            outputFile << "Best solution: " << GlobalBestCost << endl;
             // cout << "Temperature: " << temperature << endl;
             //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
             temperature = temperature * coolingRate;
@@ -177,8 +196,8 @@ public:
         // Output the best solution
         cout << "Initial solution: " << initialCost << endl;
         cout << "DistanceH: " << initialDistanceH << " DistanceV: " << initialDistanceV << endl;
-        cout << "Best solution: " << bestCost << endl;
-        cout << "DistanceH: " << graphH->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size()+1) << " DistanceV: " << graphV->calculateMaxTotalEdgeWeight(graphH->size(), graphH->size()+1) << endl;
+        cout << "Best solution: " << GlobalBestCost << endl;
+        cout << "DistanceH: " << GlobalBestH << " DistanceV: " << GlobalBestV << endl;
         cout << "Move1 count: " << move1count << endl;
         cout << "Move2 count: " << move2count << endl;
         cout << "Move3 count: " << move3count << endl;
@@ -187,17 +206,8 @@ public:
         cout << "Reject count: " << rejectCount << endl;
         cout << "Step: " << step << endl;
         cout << "--------------------------" << endl;
+        outputFile.close();
         timer.stop();
-    }
-
-    HVGraph<Block *, int> *getHorizontalGraph() const
-    {
-        return graphH;
-    }
-
-    HVGraph<Block *, int> *getVerticalGraph() const
-    {
-        return graphV;
     }
 
     inline void getNewSolution(int operation, pair<int, int> &preresult, bool isBack)
@@ -329,6 +339,65 @@ public:
             break;
         }
         }
+    }
+
+    void storeGlobalBestGraph()
+    {
+        cout << "test" << endl;
+        for(int i = 0; i < N; i++)
+        {
+            Block tempBlockH(i, graphH->getVertexProperty(i).value->getWidth(),graphH->getVertexProperty(i).value->getHeight());
+            Block tempBlockV(i, graphV->getVertexProperty(i).value->getWidth(),graphV->getVertexProperty(i).value->getHeight());
+            tempBlockH.setX(graphH->getVertexProperty(i).value->getX());
+            tempBlockV.setX(graphV->getVertexProperty(i).value->getX());
+            tempBlockH.setY(graphH->getVertexProperty(i).value->getY());
+            tempBlockV.setY(graphV->getVertexProperty(i).value->getY());
+            bestgraphH.setVertexProperty(i, tempBlockH);
+            bestgraphV.setVertexProperty(i, tempBlockV);
+        }
+
+        Block sourceBlockH(N, 0, 0);
+        Block targetBlockH(N+1, 0, 0);
+        Block sourceBlockV(N, 0, 0);
+        Block targetBlockV(N+1, 0, 0);
+
+        bestgraphH.setVertexProperty(N, sourceBlockH);
+        bestgraphH.setVertexProperty(N+1, targetBlockH);
+        bestgraphV.setVertexProperty(N, sourceBlockV);
+        bestgraphV.setVertexProperty(N+1, targetBlockV);
+
+        for (int i = 0; i < N; ++i) {
+            // 遍历第 i 个顶点的邻居顶点
+            for (auto neighbor : graphH->getAdjacencyList(i)) {
+                int neighborIndex = neighbor.first;
+                float weight = neighbor.second;
+                bestgraphH.addDirectedEdge(i, neighborIndex, weight);
+            }
+
+            for (auto neighbor : graphV->getAdjacencyList(i)) {
+                int neighborIndex = neighbor.first;
+                float weight = neighbor.second;
+                bestgraphV.addDirectedEdge(i, neighborIndex, weight);
+                //cout << bestgraphH.getEdgeWeight(i, neighborIndex) << endl;
+            }
+
+            bestgraphH.addDirectedEdge(N, i, 0);
+            bestgraphH.addDirectedEdge(i, N+1, graphH->getVertexProperty(i).value->getWidth());
+            bestgraphV.addDirectedEdge(N, i, 0);
+            bestgraphV.addDirectedEdge(i, N+1, graphH->getVertexProperty(i).value->getHeight());
+        }
+
+        
+    }
+
+    HVGraph<Block, int> getGraphH()
+    {
+        return bestgraphH;
+    }
+
+    HVGraph<Block, int> getGraphV()
+    {
+        return bestgraphV;
     }
 };
 

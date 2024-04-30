@@ -97,9 +97,17 @@ int main(int argc, char *argv[])
 
     cout << "Generate Output" << endl;
 
-    GenerateOutput generateOutput(horizontalGraph, verticalGraph);
+    HVGraph<Block , int> temp = simulatedAnnealing.getGraphH();
+
+    cout << temp.size() << endl;
+    cout << temp.getVertexProperty(5).value.getWidth();
+    cout << temp.getEdgeWeight(3, 5) << endl;
+
+    GenerateOutput generateOutput(simulatedAnnealing.getGraphH(), simulatedAnnealing.getGraphV());
     cout << arg2 << endl;
     generateOutput.generateOutputFile(arg2, blockNameList);
+
+
 
     cout << "Complete!" << endl;
     cout << "Time: " << timer.stop() << " ms" << endl;
