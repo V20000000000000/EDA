@@ -1,4 +1,4 @@
-NumBlocks 30
+NumBlocks 20
 MinAspectRatio 0.5
 MaxAspectRatio 2
 block_0 625 320

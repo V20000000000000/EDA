@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     cout << arg2 << endl;
     generateOutput.generateOutputFile(arg2, blockNameList, simulatedAnnealing.getCoordinateX(), 
     simulatedAnnealing.getCoordinateY(), simulatedAnnealing.getGlobalBestH(),simulatedAnnealing.getGlobalBestV()
-    , simulatedAnnealing.getBlockWidth(), simulatedAnnealing.getBlockHeight());
+    , simulatedAnnealing.getBlockWidth(), simulatedAnnealing.getBlockHeight(), simulatedAnnealing.getSize());
 
 
 

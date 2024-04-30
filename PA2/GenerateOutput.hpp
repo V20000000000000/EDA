@@ -26,7 +26,8 @@ public:
     }
 
     // generate output.txt
-    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, vector<int> coordinateY, int distH, int distV, vector<int> blockWidth, vector <int> blockHeight)
+    void generateOutputFile(string &outputFileName, vector<string> blockNameList, vector<int> coordinateX, vector<int> coordinateY, 
+    int distH, int distV, vector<int> blockWidth, vector <int> blockHeight, int N)
     {
         ofstream outputFile(outputFileName);
         if (!outputFile.is_open())
@@ -44,13 +45,13 @@ public:
 
         outputFile << chipWidth << " " << chipHeight << endl;
 
-        for (unsigned int i = 0; i < coordinateX.size(); i++)
+        for (int i = 0; i < N; i++)
         {
             int x0, y0, x1, y1;
             x0 = coordinateX[i];
             y0 = coordinateY[i];
-            int width = /*blockWidth[i]*/ 1;
-            int height = /*blockHeight[i]*/ 1;
+            int width = blockWidth[i];
+            int height = blockHeight[i];
             x1 = x0 + width;
             y1 = y0 + height;
             outputFile << blockNameList[i] << " ";

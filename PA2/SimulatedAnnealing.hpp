@@ -47,6 +47,7 @@ private:
     int P;
     int N;
     int preoperation;
+    int step;
     HVGraph<Block *, int> *graphH;
     HVGraph<Block *, int> *graphV;
     vector<int> coordinateX;
@@ -58,7 +59,8 @@ private:
 
 public:
     // Constructor
-    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), coordinateX(graphH->size()), coordinateY(graphH->size())
+    SimulatedAnnealing(HVGraph<Block *, int> *graphH, HVGraph<Block *, int> *graphV) : graphH(graphH), graphV(graphV), coordinateX(graphH->size()), 
+    coordinateY(graphH->size()), blockWidth(graphH->size(), 0), blockHeight(graphH->size(), 0)
     {
         cout << "SimulatedAnnealing constructor" << endl;
     }
@@ -71,12 +73,12 @@ public:
     void run()
     {
         // Initialize the timer
-        //ofstream outputLogFile("log.txt");
+        ofstream outputLogFile("log.txt");
         Timer timer;
         timer.start();
         // Initialize the temperature
         temperature = 10000;
-        int step = 0;
+        step = 0;
 
         // Set cooling rate
         coolingRate = 0.85;
@@ -116,14 +118,14 @@ public:
         cout << "Initial DistV: " << initialDistanceV << endl;
         bestCost = max(initialDistanceH, initialDistanceV);
         GlobalBestCost = bestCost;
-        cout << "temperature" << temperature << endl;
+        //cout << "temperature" << temperature << endl;
         bool run = true;
         // Loop until the temperature is zero
         while (temperature > 1 && run)
         {
             for (int i = P; i >= 1; i--)
             {
-                cout << "Temperature: " << temperature << " ";
+                //cout << "Temperature: " << temperature << " ";
                 if(timer.elapsed() > 500000)
                 {
                     run = false;
@@ -192,8 +194,8 @@ public:
             // Cool the temperature
             cout << "step: " << step << " ";
             cout << "Best solution: " << GlobalBestCost << endl;
-            //outputLogFile << "step: " << step << " ";
-            //outputLogFile << "Best solution: " << GlobalBestCost << endl;
+            outputLogFile << "step: " << step << " ";
+            outputLogFile << "Best solution: " << GlobalBestCost << endl;
             // cout << "Temperature: " << temperature << endl;
             //cout << "MaxDistanceH: " << MaxDistanceH << " MaxDistanceV: " << MaxDistanceV << endl;
             temperature = temperature * coolingRate;
@@ -212,7 +214,7 @@ public:
         cout << "Reject count: " << rejectCount << endl;
         cout << "Step: " << step << endl;
         cout << "--------------------------" << endl;
-        //outputLogFile.close();
+        outputLogFile.close();
         timer.stop();
     }
 
@@ -352,13 +354,18 @@ public:
         GlobalBestCost = currentCost;
         GlobalBestH = MaxDistanceH;
         GlobalBestV = MaxDistanceV;
-        for(int i = 0; i < N; i++)
+
+        if(step != 0)
         {
-            coordinateX[i] = graphH->calculateMaxTotalEdgeWeight(N, i);
-            coordinateY[i] = graphV->calculateMaxTotalEdgeWeight(N, i);
-            blockWidth[i] = graphH->getVertexProperty(i).value->getWidth();
-            blockHeight[i] = graphV->getVertexProperty(i).value->getHeight();
+            for(int i = 0; i < N; i++)
+            {
+                coordinateX[i] = graphH->calculateMaxTotalEdgeWeight(N, i);
+                coordinateY[i] = graphV->calculateMaxTotalEdgeWeight(N, i);
+                blockWidth[i] = graphH->getVertexProperty(i).value->getWidth();
+                blockHeight[i] = graphV->getVertexProperty(i).value->getHeight();
+            }
         }
+        
     }
 
     vector<int> getCoordinateX()
@@ -389,6 +396,12 @@ public:
     int getGlobalBestV()
     {
         return GlobalBestV;
+    }
+
+    int getSize()
+    {
+        return N;
+    
     }
 };
 
