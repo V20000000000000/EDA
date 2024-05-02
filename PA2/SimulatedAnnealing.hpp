@@ -13,7 +13,7 @@
 #include <chrono>
 #include <fstream>
 
-#include "HVgraph.hpp"
+#include "HVGraph.hpp"
 #include "Block.hpp"
 #include "Timer.hpp"
 

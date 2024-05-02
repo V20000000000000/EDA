@@ -24,6 +24,7 @@
         "xlocnum": "cpp",
         "xmemory0": "cpp",
         "xstddef": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "utility": "cpp"
     }
 }

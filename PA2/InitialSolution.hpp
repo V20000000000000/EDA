@@ -20,6 +20,9 @@
 using namespace std;
 
 void randomPermutation(vector<int> &Permutation);
+pair<int, int> checkRatio(float minAspectRatio, float maxAspectRatio, int width, int height, int id);
+float findDivider(int a, int b);
+bool isInteger(double num);
 
 class InitialSolution
 {
@@ -64,20 +67,21 @@ public:
         // vector<Block *> verticalBlocksPointers(parser->getNumBlocks() + 2);
 
         // 把每個block的資料放進去(HorizontalGraph)(VerticalGraph)
+        float minAspectRatio = parser->getMinAspectRatio();
+        float maxAspectRatio = parser->getMaxAspectRatio();
+        cout << "minAspectRatio: " << minAspectRatio << " maxAspectRatio: " << maxAspectRatio << endl;
         for (int i = 0; i < parser->getNumBlocks(); ++i)
         {
-            Block *horizontalBlock = new Block(i, parser->getBlockWidth(i), parser->getBlockHeight(i)); // Dynamically allocate memory for a new block for HorizontalGraph
-            Block *verticalBlock = new Block(i, parser->getBlockWidth(i), parser->getBlockHeight(i));   // Dynamically allocate memory for a new block for VerticalGraph
-            horizontalBlock->setWidth(parser->getBlockWidth(i));
-            // cout << "block_" << i << " width: " << parser.getBlockWidth(i) << endl;
-            horizontalBlock->setHeight(parser->getBlockHeight(i));
+            pair<int, int> widthHeight = checkRatio(minAspectRatio, maxAspectRatio, parser->getBlockWidth(i), parser->getBlockHeight(i), i);
+            //cout << "Block_" << i << " width: " << widthHeight.first << " height: " << widthHeight.second << endl;
+            Block *horizontalBlock = new Block(i, widthHeight.first, widthHeight.second); // Dynamically allocate memory for a new block for HorizontalGraph
+            Block *verticalBlock = new Block(i, widthHeight.first, widthHeight.second);   // Dynamically allocate memory for a new block for VerticalGraph
+
             horizontalBlock->setX(horizontalPermutation[i]);
             horizontalBlock->setY(verticalPermutation[i]);
             horizontalBlock->setWeight((horizontalPermutation[i] + verticalPermutation[i]));
             horizontalGraph->setVertexProperty(i, horizontalBlock);
 
-            verticalBlock->setWidth(parser->getBlockWidth(i));
-            verticalBlock->setHeight(parser->getBlockHeight(i));
             verticalBlock->setX(horizontalPermutation[i]);
             verticalBlock->setY(verticalPermutation[i]);
             verticalBlock->setWeight((verticalPermutation[i] - horizontalPermutation[i]));
@@ -221,6 +225,52 @@ void randomPermutation(vector<int> &Permutation)
     std::mt19937 gen(seed1 + seed2);
     // 使用 mt19937 引擎生成隨機數
     std::shuffle(Permutation.begin(), Permutation.end(), gen);
+}
+
+pair<int, int> checkRatio(float minAspectRatio, float maxAspectRatio, int width, int height, int id)
+{
+    float ratio = static_cast<float>(width) / static_cast<float>(height);
+    int newHeight, newWidth;
+    // cout <<"Min Aspect Ratio: " << minAspectRatio << " Max Aspect Ratio: " << maxAspectRatio << endl;
+    // cout << "width: " << width << " height: " << height << endl;
+    // cout << "ratio: " << ratio << endl;
+    if ((ratio < minAspectRatio) || (ratio > maxAspectRatio))
+    {
+        //cout <<"test" << endl;
+        if(ratio < minAspectRatio)
+        {
+            float d = findDivider(width, height);
+            //cout << "d: " << d << endl;
+            newHeight = static_cast<float>(height) / d;
+            newWidth = static_cast<float>(width) * d;
+            return checkRatio(minAspectRatio, maxAspectRatio, newWidth, newHeight, id);
+        }
+        else if(ratio > maxAspectRatio)
+        {
+            float d = findDivider(width, height);
+            newWidth = static_cast<float>(width) / d;
+            newHeight = static_cast<float>(height) * d;
+            return checkRatio(minAspectRatio, maxAspectRatio, newWidth, newHeight, id);
+        }
+    }
+    return make_pair(width, height);
+};
+
+float findDivider(int a, int b)
+{
+    vector<float> divisors = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
+    for(int d : divisors)
+    {
+        if(a % d == 0 && b % d == 0)
+        {
+            return d;
+        }
+    }
+    return 1;
+};
+
+bool isInteger(double num) {
+    return num == static_cast<int>(num);
 }
 
 #endif

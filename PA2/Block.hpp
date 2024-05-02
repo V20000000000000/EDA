@@ -32,6 +32,7 @@ public:
         isNearSource = false;
         isRotated = false;
         isPlaced = false;
+
         name = "Block_" + to_string(id);
     }
 
