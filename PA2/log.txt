@@ -40,3 +40,6 @@ step: 27300 Best solution: 7850
 step: 28000 Best solution: 7815
 step: 28700 Best solution: 7815
 step: 29400 Best solution: 7815
+step: 30100 Best solution: 7815
+step: 30800 Best solution: 7785
+step: 31500 Best solution: 7785
