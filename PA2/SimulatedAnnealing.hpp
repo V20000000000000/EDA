@@ -19,7 +19,7 @@
 
 using namespace std;
 
-int getRandomOperation();
+int getRandomOperation(double prob0, double prob1, double prob2, double prob3);
 int getRandomBlock(int numBlock);
 float getRandomProbability();
 
@@ -28,6 +28,7 @@ class SimulatedAnnealing
 private:
     double temperature;
     double coolingRate;
+    double probabilityThreshold;
     int MaxDistanceH;
     int MaxDistanceV;
     int initialDistanceH;
@@ -121,7 +122,7 @@ public:
         //cout << "temperature" << temperature << endl;
         bool run = true;
         // Loop until the temperature is zero
-        while (temperature > 0.1 && run)
+        while (temperature > 0.00001 && run)
         {
             for (int i = P; i >= 1; i--)
             {
@@ -138,7 +139,8 @@ public:
                 // cout << "preDistV: " << preDistV << endl;
 
                 // random select a operation
-                int operation = getRandomOperation();
+                int operation;
+                operation = getRandomOperation(0.25, 0.25, 0.25, 0.25);
                 //cout << "Operation: " << operation << endl;
                 
                 // Create a new solution
@@ -165,7 +167,10 @@ public:
 
                         if(N > 50 && temperature > 2)
                         {
-                            continue;
+                            if(temperature < 80 && temperature > 70)
+                                storeGlobalBestGraph();
+                            else
+                                continue;
                         }else
                         {
                             storeGlobalBestGraph();
@@ -179,7 +184,6 @@ public:
                 }
                 else // If the new solution is worse, accept it with a probability
                 {
-                    double probabilityThreshold;
                     probabilityThreshold = exp(-costDifference / temperature);
 
                     double probability = getRandomProbability();
@@ -206,7 +210,9 @@ public:
             // Cool the temperature
             storeGlobalBestGraph();
             cout << "step: " << step << " ";
-            cout << "Best solution: " << GlobalBestCost << " " << "temperature" << temperature  << endl;
+            cout << "Best solution: " << GlobalBestCost << " " << "temperature " <<
+            temperature << " time: " << timer.elapsed() << endl;
+            cout << "probabilityThreshold: " << probabilityThreshold << endl;
             outputLogFile << "step: " << step << " ";
             outputLogFile << "Best solution: " << GlobalBestCost << endl;
             // cout << "Temperature: " << temperature << endl;
@@ -413,7 +419,10 @@ public:
     }
 };
 
-inline int getRandomOperation()
+#include <random>
+#include <chrono>
+
+inline int getRandomOperation(double prob0, double prob1, double prob2, double prob3)
 {
     // 使用當前時間來設置隨機種子，以確保每次程序運行時生成的隨機數都不同
     static std::random_device rd;
@@ -422,10 +431,25 @@ inline int getRandomOperation()
     seed2 = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 gen(seed1 + seed2);
 
-    // 生成0到3之間的隨機數
-    std::uniform_int_distribution<int> dis(0, 3);
-    return dis(gen);
+    // 計算總機率，用於歸一化
+    double totalProb = prob0 + prob1 + prob2 + prob3;
+
+    // 生成0到1之間的隨機數，用於決定哪個數字生成
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
+    double randNum = dis(gen);
+
+    // 根據隨機數決定生成哪個數字
+    if (randNum < prob0 / totalProb) {
+        return 0;
+    } else if (randNum < (prob0 + prob1) / totalProb) {
+        return 1;
+    } else if (randNum < (prob0 + prob1 + prob2) / totalProb) {
+        return 2;
+    } else {
+        return 3;
+    }
 }
+
 
 inline int getRandomBlock(int numBlock)
 {
