@@ -57,12 +57,6 @@ public:
         //randomPermutation(horizontalPermutation);
         // 隨機排列 block垂直順序(向量中的值是index block的垂直y位置)
         //randomPermutation(verticalPermutation);
-        //horizontalPermutation = {1, 2, 5, 3, 4, 6};
-        //verticalPermutation = {4, 2, 1, 5, 6, 3};
-
-        // Container to store pointers to blocks
-        // vector<Block *> horizontalBlocksPointers(parser->getNumBlocks() + 2);
-        // vector<Block *> verticalBlocksPointers(parser->getNumBlocks() + 2);
 
         // 把每個block的資料放進去(HorizontalGraph)(VerticalGraph)
         float minAspectRatio = parser->getMinAspectRatio();
@@ -163,20 +157,6 @@ public:
         float MaxDiatance;
         int source;
         int target;
-        // std::tie(MaxDiatance, source, target) = HorizontalGraph->findMaxDistance(sourceSetH, targetSetH);
-        // cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
-
-        // 輸出每個vertex的最大距離(HorizontalGraph)
-        // for (int i = 0; i < parser->getNumBlocks(); i++)
-        // {
-        //     std::tie(MaxDiatance, source) = HorizontalGraph->findVertexMaxDistance(i, sourceSetH);
-        //     //cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from " << source << " (first node)" << endl;
-        // }
-
-        // 找到從起點開始的最大距離(VerticalGraph)
-        // cout << "VerticalGraph" << endl;
-        // std::tie(MaxDiatance, source, target) = VerticalGraph->findMaxDistance(sourceSetV, targetSetV);
-        // cout << "Max Distance: " << MaxDiatance << " Node next to Source : " << source << " Target: " << target << endl;
 
         // 輸出每個vertex的最大距離(VerticalGraph)
         for (int i = 0; i < parser->getNumBlocks(); i++)
@@ -184,12 +164,6 @@ public:
             // std::tie(MaxDiatance, source) = VerticalGraph->findVertexMaxDistance(i, sourceSetV);
             // cout << "Block_" << i << " Max Distance: " << MaxDiatance << " from " << source << " (first node)" << endl;
         }
-
-        // 將Horizontalgraph Verticalgraph的資料存入HorizontalGraph VerticalGraph
-        // horizontalGraph -> setEdgeWeight(3, 5, 5);
-        // cout << "getEdgeWeight: 3, 5: " << horizontalGraph -> getEdgeWeight(3, 5) << endl;
-        // horizontalGraph -> setEdgeWeight(3, 5, 10);
-        // cout << "getEdgeWeight: 3, 5: " << horizontalGraph -> getEdgeWeight(3, 5) << endl;
 
         horizontalGraph = horizontalGraph;
         verticalGraph = verticalGraph;

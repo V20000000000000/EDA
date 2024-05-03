@@ -93,72 +93,26 @@ class InputDataParse
         vector<pair<int, int>> getBlocksList() 
         {
             return blocksList;
-            /*
-            for (const auto& block : blocksList) 
-            {
-                for (const auto& pair : block) 
-                {
-                    cout << pair.first << " " << pair.second[0] << " " << pair.second[1] << std::endl;
-                }
-            }
-            */
         }
 
         vector<string> getBlocksNameList() 
         {
             return blockNamesList;
-            /*
-            for (const auto& block : blocksList) 
-            {
-                for (const auto& pair : block) 
-                {
-                    cout << pair.first << " " << pair.second[0] << " " << pair.second[1] << std::endl;
-                }
-            }
-            */
         }
 
         pair<int, int> getBlock(int index)
         {
             return blocksList[index];
-            /*
-                for (const auto& pair : blocksList[index]) 
-                {
-                    if (pair.first == "block_" + to_string(index))
-                    {
-                        cout << pair.first << " " << pair.second[0] << " " << pair.second[1] << endl;
-                    }
-                }
-            */
         }
 
         int getBlockWidth(int index)
         {
             return blocksList[index].first;
-            /*
-                for (const auto& pair : blocksList[index]) 
-                {
-                    if (pair.first == "block_" + to_string(index))
-                    {
-                        cout << pair.first << " width: " << pair.second[0] << endl;
-                    }
-                }
-            */
-            
         }
 
         int getBlockHeight(int index)
         {
             return blocksList[index].second;
-            /*
-                for (const auto& pair : blocksList[index]) 
-                {
-                    if (pair.first == "block_" + to_string(index))
-                    {
-                        cout << pair.first << " height: " << pair.second[1] << endl;
-                    }
-                }
-            */
         }
 };
 

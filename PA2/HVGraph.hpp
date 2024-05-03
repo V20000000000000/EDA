@@ -221,10 +221,6 @@ public:
 
     void swapXVertex(int vertex1, int vertex2)
     {
-        // cout << "--------------" << endl;
-        // cout << "vertex1: " << vertex1 << " vertex2: " << vertex2 << endl;
-        // cout << "vertex1 X: " << getVertexProperty(vertex1).value->getX() << endl;
-        // cout << "vertex2 X: " << getVertexProperty(vertex2).value->getX() << endl;
 
         int temp = getVertexProperty(vertex1).value->getX();
         getVertexProperty(vertex1).value->setX(getVertexProperty(vertex2).value->getX());
@@ -233,24 +229,10 @@ public:
 
         clearEdgeWeight(vertex1);
         clearEdgeWeight(vertex2);
-
-        //printGraph();
-
-        // cout << "Swap X" << endl;
-
-        // cout << "vertex1 X: " << getVertexProperty(vertex1).value->getX() << endl;
-        // cout << "vertex2 X: " << getVertexProperty(vertex2).value->getX() << endl;
-
-        //printGraph();
-        //exit(0);
     }
 
     void swapYVertex(int vertex1, int vertex2)
     {
-        // cout << "--------------" << endl;
-        // cout << "vertex1: " << vertex1 << " vertex2: " << vertex2 << endl;
-        // cout << "vertex1 Y: " << getVertexProperty(vertex1).value->getY() << endl;
-        // cout << "vertex2 Y: " << getVertexProperty(vertex2).value->getY() << endl;
 
         int temp = getVertexProperty(vertex1).value->getY();
         getVertexProperty(vertex1).value->setY(getVertexProperty(vertex2).value->getY());
@@ -259,16 +241,6 @@ public:
 
         clearEdgeWeight(vertex1);
         clearEdgeWeight(vertex2);
-
-        //printGraph();
-
-        // cout << "Swap Y" << endl;
-
-        // cout << "vertex1 Y: " << getVertexProperty(vertex1).value->getY() << endl;
-        // cout << "vertex2 Y: " << getVertexProperty(vertex2).value->getY() << endl;
-
-        //printGraph();
-        //exit(0);
     }
 
     void maintainH(int vertex1, int vertex2)
