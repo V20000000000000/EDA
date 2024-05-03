@@ -1,4 +1,3 @@
-鍵盤快速鍵更新 … Google 雲端硬碟將在 2024年8月1日 星期四更新鍵盤快速鍵，讓你透過首字母導覽功能找到所需項目。瞭解詳情
 #ifndef INITIAL_SOLUTION_HPP
 #define INITIAL_SOLUTION_HPP
 
