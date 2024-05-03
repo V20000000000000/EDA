@@ -1,3 +1,4 @@
+鍵盤快速鍵更新 … Google 雲端硬碟將在 2024年8月1日 星期四更新鍵盤快速鍵，讓你透過首字母導覽功能找到所需項目。瞭解詳情
 #ifndef INITIAL_SOLUTION_HPP
 #define INITIAL_SOLUTION_HPP
 
@@ -21,8 +22,6 @@ using namespace std;
 
 void randomPermutation(vector<int> &Permutation);
 pair<int, int> checkRatio(float minAspectRatio, float maxAspectRatio, int width, int height, int id);
-float findDivider(int a, int b);
-bool isInteger(double num);
 
 class InitialSolution
 {
@@ -230,47 +229,33 @@ void randomPermutation(vector<int> &Permutation)
 pair<int, int> checkRatio(float minAspectRatio, float maxAspectRatio, int width, int height, int id)
 {
     float ratio = static_cast<float>(width) / static_cast<float>(height);
-    int newHeight, newWidth;
-    // cout <<"Min Aspect Ratio: " << minAspectRatio << " Max Aspect Ratio: " << maxAspectRatio << endl;
-    // cout << "width: " << width << " height: " << height << endl;
-    // cout << "ratio: " << ratio << endl;
     if ((ratio < minAspectRatio) || (ratio > maxAspectRatio))
     {
-        //cout <<"test" << endl;
-        if(ratio < minAspectRatio)
+        int area = width * height;
+        if (ratio < minAspectRatio)
         {
-            float d = findDivider(width, height);
-            //cout << "d: " << d << endl;
-            newHeight = static_cast<float>(height) / d;
-            newWidth = static_cast<float>(width) * d;
-            return checkRatio(minAspectRatio, maxAspectRatio, newWidth, newHeight, id);
+            for (int i = width + 1; i < height; i++) // Increment i by 1 and fix loop condition
+            {
+                if (area % i == 0)
+                {
+                    int j = area / i;
+                    return checkRatio(minAspectRatio, maxAspectRatio, i, j, id);
+                }
+            }
         }
-        else if(ratio > maxAspectRatio)
+        else if (ratio > maxAspectRatio)
         {
-            float d = findDivider(width, height);
-            newWidth = static_cast<float>(width) / d;
-            newHeight = static_cast<float>(height) * d;
-            return checkRatio(minAspectRatio, maxAspectRatio, newWidth, newHeight, id);
+            for (int i = height + 1; i < width; i++) // Increment i by 1 and fix loop condition
+            {
+                if (area % i == 0)
+                {
+                    int j = area / i;
+                    return checkRatio(minAspectRatio, maxAspectRatio, i, j, id);
+                }
+            }
         }
     }
     return make_pair(width, height);
-};
-
-float findDivider(int a, int b)
-{
-    vector<float> divisors = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
-    for(int d : divisors)
-    {
-        if(a % d == 0 && b % d == 0)
-        {
-            return d;
-        }
-    }
-    return 1;
-};
-
-bool isInteger(double num) {
-    return num == static_cast<int>(num);
 }
 
 #endif

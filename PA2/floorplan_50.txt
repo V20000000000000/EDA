@@ -18,7 +18,7 @@ block_13 625 800
 block_14 500 1000
 block_15 800 750
 block_16 960 625
-block_17 800 750
+block_17 100 750
 block_18 960 625
 block_19 800 750
 block_20 960 625
