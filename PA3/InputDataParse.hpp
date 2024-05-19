@@ -17,7 +17,11 @@ public:
     ~InputDataParse() = default; // 默认析构函数
     void parseInputData(const string& fileName); // 添加 const 引用
     void printParsedData() const; // 添加 const 成员函数
+    
     vector<vector<int>> getParsedData() const; // 修正返回类型并添加 const 成员函数
+    int getNumHoles();
+    int getDim1();
+    int getDim2();
 };
 
 // 在类外部实现成员函数
@@ -53,6 +57,22 @@ void InputDataParse::parseInputData(const string& fileName) {
     inputFile.close();
 }
 
+
+int InputDataParse::getNumHoles()
+{
+   return numHoles;
+}
+
+int InputDataParse::getDim1()
+{
+   return layoutDimension1;
+}
+
+int InputDataParse::getDim2()
+{
+   return layoutDimension2;
+}
+
 void InputDataParse::printParsedData() const {
     cout << "Layout dimensions: " << layoutDimension1 << "x" << layoutDimension2 << endl;
     cout << "Number of holes: " << numHoles << endl;
@@ -64,6 +84,7 @@ void InputDataParse::printParsedData() const {
         cout << endl;
     }
 }
+
 
 vector<vector<int>> InputDataParse::getParsedData() const {
     return parsedData;
