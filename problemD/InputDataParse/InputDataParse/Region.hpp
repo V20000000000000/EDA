@@ -12,6 +12,7 @@ using namespace std;
 class Region
 {
     private:
+        string name;
         int id;
         int x0;
         int y0;
@@ -27,22 +28,27 @@ class Region
 
         void setX0(int x)
         {
-            x0 = x;
+            this->x0 = x;
         }
 
         void setY0(int y)
         {
-            y0 = y;
+            this->y0 = y;
         }
 
         void setX1(int x)
         {
-            x1 = x;
+            this->x1 = x;
         }
 
         void setY1(int y)
         {
-            y1 = y;
+            this->y1 = y;
+        }
+
+        void setName(string name)
+        {
+            this->name = name;
         }
 
         int getX0() const
@@ -63,6 +69,11 @@ class Region
         int getY1() const
         {
             return y1;
+        }
+
+        string getName() const
+        {
+            return name;
         }
 };
 

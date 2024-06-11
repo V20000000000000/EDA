@@ -8,8 +8,8 @@
 
 int main()
 {
-    InputDataParse idp("case4");
-    idp.parseBlockData("case4");
+    InputDataParse idp("testcase", "case4");
+    idp.parse();
     return 0;
 }
 

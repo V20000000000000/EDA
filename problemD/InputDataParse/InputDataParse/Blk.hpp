@@ -35,7 +35,8 @@ private:
     bool is_tile;
 
 public:
-    Blk(int id) : id(id) {}
+    Blk() : id(-1), x(0), y(0), direction(N), through_block_net_num(0), is_feedthroughable(false), is_tile(false) {}
+    Blk(int id) : id(id), x(0), y(0), direction(N), through_block_net_num(0), is_feedthroughable(false), is_tile(false) {}
 
     int getId() const
     {
@@ -44,12 +45,12 @@ public:
 
     void setLocX(int x)
     {
-        x = x;
+        this->x = x;
     }
 
     void setLocY(int y)
     {
-        y = y;
+        this->y = y;
     }
 
     void setDirection(Direction direction)
@@ -59,28 +60,28 @@ public:
 
     void setBlockName(const string &name)
     {
-        block_name = name;
+        this->block_name = name;
     }
 
     void setThroughBlockNetNum(int num)
     {
-        through_block_net_num = num;
+        this->through_block_net_num = num;
     }
 
     void addThroughBlockEdgeNetNum(int x0, int y0, int x1, int y1, int value)
     {
-        through_block_edge_net_num.push_back(make_pair(make_pair(x0, y0), value));
+        this->through_block_edge_net_num.push_back(make_pair(make_pair(x0, y0), value));
     }
 
     void addBlockPortRegion(int x0, int y0, int x1, int y1)
     {
-        block_port_region.push_back(make_pair(x0, y0));
-        block_port_region.push_back(make_pair(x1, y1));
+        this->block_port_region.push_back(make_pair(x0, y0));
+        this->block_port_region.push_back(make_pair(x1, y1));
     }
 
     void setFeedthroughable(bool feedthroughable)
     {
-        is_feedthroughable = feedthroughable;
+        this->is_feedthroughable = feedthroughable;
     }
 
     void setIsTile(bool is_tile)
@@ -90,7 +91,7 @@ public:
 
     void addVertics(int x, int y)
     {
-        vertics.push_back(make_pair(x, y));
+        this->vertics.push_back(make_pair(x, y));
     }
 
     int getLocX() const
