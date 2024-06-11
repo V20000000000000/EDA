@@ -172,6 +172,7 @@ void InputDataParse::parseChipTop()
             block.setLocY(y_coord);
             block.setDirection(stringToDirection(orientation));
             block.setBlockName(blk_name);
+            block.setBlockIdName(tokens[2]);
 
             // // Example output
             // cout << "Block name: " << blk_name << endl;
@@ -250,51 +251,69 @@ void InputDataParse::parseBlockData(int block_num)
         ifstream fin(base_dir + "/" + case_name + "/" + case_name + "_def/" + filename);
         //cout << "Reading " << filename << endl;
 
-        vector<string> tokens;
-        string line;
-        int state = 0;
-
-        while (getline(fin, line) && state == 0) 
+        // check if the file is open
+        if (!fin.is_open()) 
         {
-            //cout << line << endl;
-            tokens = split(line, ' '); // Assuming split function correctly tokenizes the line
-            if (tokens.empty())
-                continue;
-            else if (tokens[0] == "DIEAREA") 
-            {
-                //cout << "test" << endl;
-                // Extract the vertices of the DIEAREA
-                for (size_t j = 2; j < tokens.size(); j += 4) 
-                {
-                    int x = stoi(tokens[j]); // Removing '(' from the string
-                    int y = stoi(tokens[j + 1]);
-                    // Store the vertices in a vector
-                    Blk &block = allBlocks[i];
-                    block.addVertics(x, y);
-                    //cout << "X: " << x << " Y: " << y << endl;
-                }
+            cout << "-- " << filename << " does not exist--" << endl;
+            string block_id_name = allBlocks[i].getBlockIdName();
 
-                // Handle the extracted DIEAREA data
-                // For example, you can print it or store it in a data structure
-                // for (size_t j = 0; j < allBlocks[i].getVertics().size(); j++) 
-                // {
-                //     cout << "X: " << allBlocks[i].getVertics()[j].first << " Y: " << allBlocks[i].getVertics()[j].second << endl;
-                // }
-            }
-            else if (tokens[0] == "END") 
+            // Extract the number part after the underscore
+            size_t pos = block_id_name.find('_');
+            string number_str = block_id_name.substr(pos + 1);
+            int number = stoi(number_str);
+
+            // Access the block_id_name to get the block definition file and update the block i
+            for (size_t j = 0; j < allBlocks[number].getVertics().size(); j++) 
             {
-                state = 1;
+                Blk &block = allBlocks[i];
+                block.addVertics(allBlocks[number].getVertics()[j].first, allBlocks[number].getVertics()[j].second);
             }
         }
-        fin.close();
-        //cout << "Block " << i << " has been parsed" << endl;
-    }
-}
+        else
+        {
+            vector<string> tokens;
+            string line;
+            int state = 0;
 
-void InputDataParse::parseNetData(const string &case_name) {
+            while (getline(fin, line) && state == 0) 
+            {
+                //cout << line << endl;
+                tokens = split(line, ' '); // Assuming split function correctly tokenizes the line
+                if (tokens.empty())
+                    continue;
+                else if (tokens[0] == "DIEAREA") 
+                {
+                    //cout << "test" << endl;
+                    // Extract the vertices of the DIEAREA
+                    for (size_t j = 2; j < tokens.size(); j += 4) 
+                    {
+                        int x = stoi(tokens[j]); // Removing '(' from the string
+                        int y = stoi(tokens[j + 1]);
+                        // Store the vertices in a vector
+                        Blk &block = allBlocks[i];
+                        block.addVertics(x, y);
+                        //cout << "X: " << x << " Y: " << y << endl;
+                    }
+
+                    // Handle the extracted DIEAREA data
+                    // For example, you can print it or store it in a data structure
+                    // for (size_t j = 0; j < allBlocks[i].getVertics().size(); j++) 
+                    // {
+                    //     cout << "X: " << allBlocks[i].getVertics()[j].first << " Y: " << allBlocks[i].getVertics()[j].second << endl;
+                    // }
+                }
+                else if (tokens[0] == "END") 
+                {
+                    state = 1;
+                }
+            }
+            fin.close();
+            //cout << "Block " << i << " has been parsed" << endl;
+            }
+    }
 
     ifstream fin(base_dir + "/" + case_name + "/" + case_name + "_cfg.json");
-    cout << "Reading " << case_name << "_cfg.json" << endl;
+    //cout << "Reading " << case_name << "_cfg.json" << endl;
 
     if (!fin.is_open()) {
         cerr << "Unable to open file: " << case_name + "_cfg.json" << endl;
@@ -310,7 +329,7 @@ void InputDataParse::parseNetData(const string &case_name) {
         Blk &b = allBlocks[id];
 
         cout << "Block name: " << block_name << endl;
-        b.setThroughBlockNetNum(block["through_block_net_num"].get<int>());
+        //b.setThroughBlockNetNum(block["through_block_net_num"].get<int>());
 
         for (const auto &edge_net : block["through_block_edge_net_num"]) {
             int x0 = edge_net[0][0];
@@ -319,7 +338,7 @@ void InputDataParse::parseNetData(const string &case_name) {
             int y1 = edge_net[1][1];
             int value = edge_net[2];
             b.addThroughBlockEdgeNetNum(x0, y0, x1, y1, value);
-            cout << "Edge net: (" << x0 << ", " << y0 << ") -> (" << x1 << ", " << y1 << ") Value: " << value << endl;
+            //cout << "Edge net: (" << x0 << ", " << y0 << ") -> (" << x1 << ", " << y1 << ") Value: " << value << endl;
         }
 
         for (const auto &port_region : block["block_port_region"]) {
@@ -328,15 +347,47 @@ void InputDataParse::parseNetData(const string &case_name) {
             int x1 = port_region[2];
             int y1 = port_region[3];
             b.addBlockPortRegion(x0, y0, x1, y1);
-            cout << "Port region: (" << x0 << ", " << y0 << ") -> (" << x1 << ", " << y1 << ")" << endl;
+            //cout << "Port region: (" << x0 << ", " << y0 << ") -> (" << x1 << ", " << y1 << ")" << endl;
         }
 
         b.setFeedthroughable(block["is_feedthroughable"].get<string>() == "True");
         b.setIsTile(block["is_tile"].get<string>() == "True");
 
-        cout << "Through block net num: " << b.getThroughBlockNetNum() << endl;
-        cout << "Feedthroughable: " << b.isFeedthroughable() << endl;
+        // cout << "Through block net num: " << b.getThroughBlockNetNum() << endl;
+        // cout << "Feedthroughable: " << b.isFeedthroughable() << endl;
     }
+
+    fin.close();
+
+    //example output
+    for (int i = 0; i < block_num; i++) {
+        cout << "-----------------------------------" << endl;
+        cout << "Block name: " << allBlocks[i].getBlockName() << endl;
+        cout << "X coordinate: " << allBlocks[i].getLocX() << endl;
+        cout << "Y coordinate: " << allBlocks[i].getLocY() << endl;
+        cout << "Direction: " << allBlocks[i].getDirection() << endl;
+        cout << "Through block net num: " << allBlocks[i].getThroughBlockNetNum() << endl;
+        cout << "Feedthroughable: " << allBlocks[i].isFeedthroughable() << endl;
+        cout << "Is tile: " << allBlocks[i].isTile() << endl;
+
+        for (const auto &edge_net : allBlocks[i].getThroughBlockEdgeNetNum()) {
+            cout << "Edge net: (" << edge_net.first.first << ", " << edge_net.first.second << ") -> (" << edge_net.second << ")" << endl;
+        }
+
+        for (const auto &port_region : allBlocks[i].getBlockPortRegion()) {
+            cout << "Port region: (" << port_region.first << ", " << port_region.second << ") -> (" << port_region.first << ", " << port_region.second << ")" << endl;
+        }
+
+        for (const auto &vertex : allBlocks[i].getVertics()) {
+            cout << "Vertex: (" << vertex.first << ", " << vertex.second << ")" << endl;
+        }
+    }
+
+}
+
+void InputDataParse::parseNetData(const string &case_name) {
+
+    
 }
 
 Direction stringToDirection(const string &str) {

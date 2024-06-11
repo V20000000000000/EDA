@@ -24,6 +24,7 @@ class Blk
 {
 private:
     int id;
+    string block_id_name;
     int x, y;
     Direction direction;
     string block_name;
@@ -61,6 +62,11 @@ public:
     void setBlockName(const string &name)
     {
         this->block_name = name;
+    }
+
+    void setBlockIdName(const string &name)
+    {
+        this->block_id_name = name;
     }
 
     void setThroughBlockNetNum(int num)
@@ -112,6 +118,11 @@ public:
     string getBlockName() const
     {
         return block_name;
+    }
+
+    string getBlockIdName() const
+    {
+        return block_id_name;
     }
 
     int getThroughBlockNetNum() const
