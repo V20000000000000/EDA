@@ -109,6 +109,9 @@ public:
         fin.close();
     }
 
+    void printBlockData();
+    void printNetData();
+
     void parse()
     {
         // TODO: parse chip_top.def
@@ -386,9 +389,10 @@ void InputDataParse::parseBlockData(int block_num)
 
 }
 
-void InputDataParse::parseNetData(const string &case_name) {
+void InputDataParse::parseNetData(const string &case_name) 
+{
     // read chip_top.def from file
-    ifstream fin(base_dir + "/" + case_name + "/" + case_name + "_def/" + case_name + ".json");
+    ifstream fin(base_dir + "/" + case_name + "/" + case_name + ".json");
     cout << "Reading " + case_name + ".json" << endl;
     
     if (!fin.is_open()) {
@@ -399,88 +403,218 @@ void InputDataParse::parseNetData(const string &case_name) {
     nlohmann :: json j;
     fin >> j;
 
-    int max_id = 0;
-    for (const auto &net : j) {
-        max_id = max(max_id, stoi(net["ID"].get<string>()));
-        cout << "max_id: " << max_id << endl;
-    }
+    cout << "Parsing net data" << endl;
 
-    for (int i = 0; i <= max_id; i++) 
+    // get the net number
+    // 使用 JSON 對象的大小來計算網路的數量
+    net_num = j.size();
+
+    // build a vector of Net objects
+    for (int i = 0; i < net_num; i++) 
     {
         allNets.push_back(Net(i));
     }
+    
+    //cout << "Net num: " << max_id << endl;
 
     for (const auto &net : j)
     {
-        int id = stoi(net["ID"].get<string>());
+        int id = net["ID"].get<int>();
         Net &n = allNets[id];
 
+        //cout << "ID" << endl;
         //RX
         for (const auto &rx : net["RX"]) {
+            //cout << "RX: " << rx.get<string>() << endl;
             n.addRx(rx.get<string>());
+            //cout << "RX: " << n.getRx().back() << endl;
         }
 
+        cout << "TX" << endl;
         //TX
         for (const auto &tx : net["TX"]) {
+            //cout << "TX: " << tx.get<string>() << endl;
             n.addTx(tx.get<string>());
+            //cout << "TX: " << n.getTx().back() << endl;
         }
 
         //NUM
+        //cout << "NUM: " << net["NUM"].get<int>() << endl;
         n.setNum(net["NUM"].get<int>());
+        cout << "NUM: " << n.getNum() << endl;
 
+        cout << "MUST_THROUGH" << endl;
         //must_through “MUST_THROUGH”: [[D,(X0,Y0,X1,Y1),(X2,Y2,X3,Y3)], 
         for (const auto &must_through : net["MUST_THROUGH"]) {
+            cout << "test" << endl;
             string key = must_through[0];
-            int x0 = must_through[1][0];
-            int y0 = must_through[1][1];
-            int x1 = must_through[1][2];
-            int y1 = must_through[1][3];
-            int x2 = must_through[2][0];
-            int y2 = must_through[2][1];
-            int x3 = must_through[2][2];
-            int y3 = must_through[2][3];
+
+            int x0 = must_through[1][0].get<int>();
+            int y0 = must_through[1][1].get<int>();
+            int x1 = must_through[1][2].get<int>();
+            int y1 = must_through[1][3].get<int>();
+            int x2 = must_through[2][0].get<int>();
+            int y2 = must_through[2][1].get<int>();
+            int x3 = must_through[2][2].get<int>();
+            int y3 = must_through[2][3].get<int>();
+
+            // cout << "key: " << key << endl;
+            // cout << "x0: " << x0 << endl;
+            // cout << "y0: " << y0 << endl;
+            // cout << "x1: " << x1 << endl;
+            // cout << "y1: " << y1 << endl;
+            // cout << "x2: " << x2 << endl;
+            // cout << "y2: " << y2 << endl;
+            // cout << "x3: " << x3 << endl;
+            // cout << "y3: " << y3 << endl;
+
             n.addMustThrough(key, x0, y0, x1, y1, x2, y2, x3, y3);
+
+            // cout << "key: " << n.getMustThrough().begin()->first << endl;
+            // cout << "x0: " << n.getMustThrough().begin()->second[0] << endl;
+            // cout << "y0: " << n.getMustThrough().begin()->second[1] << endl;
+            // cout << "x1: " << n.getMustThrough().begin()->second[2] << endl;
+            // cout << "y1: " << n.getMustThrough().begin()->second[3] << endl;
+            // cout << "x2: " << n.getMustThrough().begin()->second[4] << endl;
+            // cout << "y2: " << n.getMustThrough().begin()->second[5] << endl;
+            // cout << "x3: " << n.getMustThrough().begin()->second[6] << endl;
+            // cout << "y3: " << n.getMustThrough().begin()->second[7] << endl;
         }
 
+        cout << "HMFT_MUST_THROUGH" << endl;
         //hmft_must_through “HMFT_MUST_THROUGH”: [[D,(X0,Y0,X1,Y1),(X2,Y2,X3,Y3)],
         for (const auto &hmft_must_through : net["HMFT_MUST_THROUGH"]) {
-            string key = hmft_m
-            ust_through[0];
-            int x0 = hmft_must_through[1][0];
-            int y0 = hmft_must_through[1][1];
-            int x1 = hmft_must_through[1][2];
-            int y1 = hmft_must_through[1][3];
-            int x2 = hmft_must_through[2][0];
-            int y2 = hmft_must_through[2][1];
-            int x3 = hmft_must_through[2][2];
-            int y3 = hmft_must_through[2][3];
-            n.addHmftMustThrough(key, x0, y0, x1, y1, x2, y2, x3, y3);     
+            string key = hmft_must_through[0];
+
+            int x0 = hmft_must_through[1][0].get<int>();
+            int y0 = hmft_must_through[1][1].get<int>();
+            int x1 = hmft_must_through[1][2].get<int>();
+            int y1 = hmft_must_through[1][3].get<int>();
+            int x2 = hmft_must_through[2][0].get<int>();
+            int y2 = hmft_must_through[2][1].get<int>();
+            int x3 = hmft_must_through[2][2].get<int>();
+            int y3 = hmft_must_through[2][3].get<int>();
+
+            // cout << "key: " << key << endl;
+            // cout << "x0: " << x0 << endl;
+            // cout << "y0: " << y0 << endl;
+            // cout << "x1: " << x1 << endl;
+            // cout << "y1: " << y1 << endl;
+            // cout << "x2: " << x2 << endl;
+            // cout << "y2: " << y2 << endl;
+            // cout << "x3: " << x3 << endl;
+            // cout << "y3: " << y3 << endl;
+
+            n.addHmftMustThrough(key, x0, y0, x1, y1, x2, y2, x3, y3);  
+
+            // cout << "key: " << n.getHmftMustThrough().begin()->first << endl;
+            // cout << "x0: " << n.getHmftMustThrough().begin()->second[0] << endl;
+            // cout << "y0: " << n.getHmftMustThrough().begin()->second[1] << endl;
+            // cout << "x1: " << n.getHmftMustThrough().begin()->second[2] << endl;
+            // cout << "y1: " << n.getHmftMustThrough().begin()->second[3] << endl;
+            // cout << "x2: " << n.getHmftMustThrough().begin()->second[4] << endl;
+            // cout << "y2: " << n.getHmftMustThrough().begin()->second[5] << endl;
+            // cout << "x3: " << n.getHmftMustThrough().begin()->second[6] << endl;
+            // cout << "y3: " << n.getHmftMustThrough().begin()->second[7] << endl;   
         }
 
         // TX_COORD
-        for (const auto &tx_coord : net["TX_COORD"]) {
-            int x = tx_coord[0];
-            int y = tx_coord[1];
-            n.addTxCoord(x, y);
-        }
+        cout << "TX_COORD type: " << net.at("TX_COORD").type_name() << endl;
+        double x = net.at("TX_COORD")[0].get<double>();
+        double y = net.at("TX_COORD")[1].get<double>();
+        n.addTxCoord(x, y);
 
         // RX_COORD
         for (const auto &rx_coord : net["RX_COORD"]) {
-            int x = rx_coord[0];
-            int y = rx_coord[1];
+            int x = rx_coord[0].get<double>();
+            int y = rx_coord[1].get<double>();
             n.addRxCoord(x, y);
         }
+    }
+
+    fin.close();
 }
 
-Direction stringToDirection(const string &str) {
-                if (str == "N") return N;
-                if (str == "E") return E;
-                if (str == "S") return S;
-                if (str == "W") return W;
-                if (str == "FN") return FN;
-                if (str == "FE") return FE;
-                if (str == "FS") return FS;
-                if (str == "FW") return FW;
-                throw invalid_argument("Invalid direction string: " + str);
-            }
+void InputDataParse::printBlockData() {
+    cout << "Printing block data" << endl;
+    for (int i = 0; i < block_num; i++) {
+        cout << "-----------------------------------" << endl;
+        cout << "Block name: " << allBlocks[i].getBlockName() << endl;
+        cout << "X coordinate: " << allBlocks[i].getLocX() << endl;
+        cout << "Y coordinate: " << allBlocks[i].getLocY() << endl;
+        cout << "Direction: " << allBlocks[i].getDirection() << endl;
+        cout << "Through block net num: " << allBlocks[i].getThroughBlockNetNum() << endl;
+        cout << "Feedthroughable: " << allBlocks[i].isFeedthroughable() << endl;
+        cout << "Is tile: " << allBlocks[i].isTile() << endl;
+
+        for (const auto &edge_net : allBlocks[i].getThroughBlockEdgeNetNum()) {
+            cout << "Edge net: (" << edge_net.first.first << ", " << edge_net.first.second << ") -> (" << edge_net.second << ")" << endl;
+        }
+
+        for (const auto &port_region : allBlocks[i].getBlockPortRegion()) {
+            cout << "Port region: (" << port_region.first << ", " << port_region.second << ") -> (" << port_region.first << ", " << port_region.second << ")" << endl;
+        }
+
+        for (const auto &vertex : allBlocks[i].getVertics()) {
+            cout << "Vertex: (" << vertex.first << ", " << vertex.second << ")" << endl;
+        }
+
+        cout << "-----------------------------------" << endl;
+    }
+}
+
+void InputDataParse::printNetData() {
+    cout << "Printing net data" << endl;
+    cout << "Net num: " << net_num << endl;
+    for (int i = 0; i < net_num; i++) {
+
+        cout << "Net ID: " << allNets[i].getId() << endl;
+
+        cout << "RX: ";
+        for (const auto &rx : allNets[i].getRx()) {
+            cout << rx << endl;
+        }
+
+        cout << "TX: ";
+        for (const auto &tx : allNets[i].getTx()) {
+            cout << tx << endl;
+        }
+        cout << "NUM: " << allNets[i].getNum() << endl;
+
+        cout << "MUST_THROUGH: " << endl;
+        for (const auto &must_through : allNets[i].getMustThrough()) {
+            cout << must_through.first << ": (" << must_through.second[0] << ", " << must_through.second[1] << ") -> (" << must_through.second[2] << ", " << must_through.second[3] << ") -> (" << must_through.second[4] << ", " << must_through.second[5] << ") -> (" << must_through.second[6] << ", " << must_through.second[7] << ")" << endl;
+        }
+
+        cout << "HMFT_MUST_THROUGH: " << endl;
+        for (const auto &hmft_must_through : allNets[i].getHmftMustThrough()) {
+            cout << hmft_must_through.first << ": (" << hmft_must_through.second[0] << ", " << hmft_must_through.second[1] << ") -> (" << hmft_must_through.second[2] << ", " << hmft_must_through.second[3] << ") -> (" << hmft_must_through.second[4] << ", " << hmft_must_through.second[5] << ") -> (" << hmft_must_through.second[6] << ", " << hmft_must_through.second[7] << ")" << endl;
+        }
+
+        cout << "TX_COORD: " << endl;
+        for (const auto &tx_coord : allNets[i].getTxCoord()) {
+            cout << "(" << tx_coord.first << ", " << tx_coord.second << ")" << endl;
+        }
+
+        cout << "RX_COORD: " << endl;
+        for (const auto &rx_coord : allNets[i].getRxCoord()) {
+            cout << "(" << rx_coord.first << ", " << rx_coord.second << ")" << endl;
+        }
+
+        cout << "-----------------------------------" << endl;
+    }
+}
+
+Direction stringToDirection(const string &str)
+    {
+        if (str == "N") return N;
+        if (str == "E") return E;
+        if (str == "S") return S;
+        if (str == "W") return W;
+        if (str == "FN") return FN;
+        if (str == "FE") return FE;
+        if (str == "FS") return FS;
+        if (str == "FW") return FW;
+        throw invalid_argument("Invalid direction string: " + str);
+    }
 #endif
