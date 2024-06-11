@@ -41,6 +41,7 @@ private:
     // block num
     int block_num;
     int region_num;
+    int net_num;
 
     /**
      * @brief parse chip_top.def
@@ -386,8 +387,89 @@ void InputDataParse::parseBlockData(int block_num)
 }
 
 void InputDataParse::parseNetData(const string &case_name) {
-
+    // read chip_top.def from file
+    ifstream fin(base_dir + "/" + case_name + "/" + case_name + "_def/" + case_name + ".json");
+    cout << "Reading " + case_name + ".json" << endl;
     
+    if (!fin.is_open()) {
+        cerr << "Unable to open file: " << case_name + ".json" << endl;
+        return;
+    }
+
+    nlohmann :: json j;
+    fin >> j;
+
+    int max_id = 0;
+    for (const auto &net : j) {
+        max_id = max(max_id, stoi(net["ID"].get<string>()));
+        cout << "max_id: " << max_id << endl;
+    }
+
+    for (int i = 0; i <= max_id; i++) 
+    {
+        allNets.push_back(Net(i));
+    }
+
+    for (const auto &net : j)
+    {
+        int id = stoi(net["ID"].get<string>());
+        Net &n = allNets[id];
+
+        //RX
+        for (const auto &rx : net["RX"]) {
+            n.addRx(rx.get<string>());
+        }
+
+        //TX
+        for (const auto &tx : net["TX"]) {
+            n.addTx(tx.get<string>());
+        }
+
+        //NUM
+        n.setNum(net["NUM"].get<int>());
+
+        //must_through “MUST_THROUGH”: [[D,(X0,Y0,X1,Y1),(X2,Y2,X3,Y3)], 
+        for (const auto &must_through : net["MUST_THROUGH"]) {
+            string key = must_through[0];
+            int x0 = must_through[1][0];
+            int y0 = must_through[1][1];
+            int x1 = must_through[1][2];
+            int y1 = must_through[1][3];
+            int x2 = must_through[2][0];
+            int y2 = must_through[2][1];
+            int x3 = must_through[2][2];
+            int y3 = must_through[2][3];
+            n.addMustThrough(key, x0, y0, x1, y1, x2, y2, x3, y3);
+        }
+
+        //hmft_must_through “HMFT_MUST_THROUGH”: [[D,(X0,Y0,X1,Y1),(X2,Y2,X3,Y3)],
+        for (const auto &hmft_must_through : net["HMFT_MUST_THROUGH"]) {
+            string key = hmft_m
+            ust_through[0];
+            int x0 = hmft_must_through[1][0];
+            int y0 = hmft_must_through[1][1];
+            int x1 = hmft_must_through[1][2];
+            int y1 = hmft_must_through[1][3];
+            int x2 = hmft_must_through[2][0];
+            int y2 = hmft_must_through[2][1];
+            int x3 = hmft_must_through[2][2];
+            int y3 = hmft_must_through[2][3];
+            n.addHmftMustThrough(key, x0, y0, x1, y1, x2, y2, x3, y3);     
+        }
+
+        // TX_COORD
+        for (const auto &tx_coord : net["TX_COORD"]) {
+            int x = tx_coord[0];
+            int y = tx_coord[1];
+            n.addTxCoord(x, y);
+        }
+
+        // RX_COORD
+        for (const auto &rx_coord : net["RX_COORD"]) {
+            int x = rx_coord[0];
+            int y = rx_coord[1];
+            n.addRxCoord(x, y);
+        }
 }
 
 Direction stringToDirection(const string &str) {

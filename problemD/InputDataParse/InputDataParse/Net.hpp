@@ -26,12 +26,11 @@ class Net
 {
 private:
     int id;
-    string net_name;
-    vector<pair<int, int>> rx;
-    vector<pair<int, int>> tx;
+    vector<string> rx;
+    vector<string> tx;
     int num;
-    vector<pair<int, int>> must_through;
-    vector<pair<int, int>> hmft_must_through;
+    map <string, pair<pair<int, int>, pair<int, int>>> must_through;
+    map <string, pair<pair<int, int>, pair<int, int>>> hmft_must_through;
 
 public:
     Net(int id) : id(id) {}
@@ -41,19 +40,39 @@ public:
         return id;
     }
 
-    void setNetName(const string &name)
+    vector<string> getRx() const
     {
-        net_name = name;
+        return rx;
     }
 
-    void addRx(int x, int y)
+    vector<string> getTx() const
     {
-        rx.push_back(make_pair(x, y));
+        return tx;
     }
 
-    void addTx(int x, int y)
+    int getNum() const
     {
-        tx.push_back(make_pair(x, y));
+        return num;
+    }
+
+    map <string, pair<pair<int, int>, pair<int, int>>> getMustThrough() const
+    {
+        return must_through;
+    }
+
+    map <string, pair<pair<int, int>, pair<int, int>>> getHmftMustThrough() const
+    {
+        return hmft_must_through;
+    }
+
+    void addRx(string p)
+    {
+        rx.push_back(p);
+    }
+
+    void addTx(string p)
+    {
+        tx.push_back(p);
     }
 
     void setNum(int n)
@@ -61,14 +80,14 @@ public:
         num = n;
     }
 
-    void addMustThrough(int x, int y)
+    void addMustThrough(string s, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3)
     {
-        must_through.push_back(make_pair(x, y));
+        must_through.emplace(s, make_pair(make_pair(x0, y0), make_pair(x1, y1)));
     }
 
-    void addHmftMustThrough(int x, int y)
+    void addHmftMustThrough(string s, int x0, int y0, int x1, int y1)
     {
-        hmft_must_through.push_back(make_pair(x, y));
+       hmft_must_through.emplace(s, make_pair(make_pair(x0, y0), make_pair(x1, y1)));
     }
 };
 
