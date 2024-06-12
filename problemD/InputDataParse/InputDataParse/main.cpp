@@ -11,9 +11,9 @@ int main()
     InputDataParse idp("testcase", "case4");
     idp.parse();
     cout << "---------------------\n";
-    //idp.printBlockData();
+    idp.printBlockData();
     cout << "---------------------\n";
-    idp.printNetData();
+    //idp.printNetData();
     return 0;
 }
 

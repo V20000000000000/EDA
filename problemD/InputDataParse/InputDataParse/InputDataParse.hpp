@@ -21,6 +21,7 @@
 using namespace std;
 
 Direction stringToDirection(const string &str);
+string DirectionToString(Direction dir);
 
 /**
  * @brief InputDataParse class
@@ -69,6 +70,16 @@ private:
      * @return void
      */
     void parseNetData(const string &case_name);
+
+    /**
+     * @brief parse caseX_cfg.json
+     *
+     * @param case_name: name of the testcase
+     * @param block_num: number of blocks in the testcase
+     *
+     * @return void
+     */
+    void writeFile(const string &case_name);
 
 public:
     InputDataParse(const string &base_dir, const string &case_name) : base_dir(base_dir), case_name(case_name) 
@@ -122,6 +133,8 @@ public:
         // TODO: parse net data(caseX.json)
         parseNetData(case_name);
         cout << "Parsing complete" << endl;
+
+        writeFile(case_name);
     }
 };
 
@@ -605,6 +618,54 @@ void InputDataParse::printNetData() {
     }
 }
 
+void InputDataParse::writeFile(const string &case_name)
+{
+    // Block data write to file
+    ofstream fout("block.txt");
+    if (!fout.is_open())
+    {
+        cerr << "Unable to open file: block_data.txt" << endl;
+        return;
+    }
+
+    for (int i = 0; i < block_num; i++)
+    {
+        // calculate the coordinate of vertex of the block
+        int x0 = allBlocks[i].getLocX();
+        int y0 = allBlocks[i].getLocY();
+
+        fout << allBlocks[i].getBlockName() << " ";
+
+        for(size_t j = 0; j < allBlocks[i].getVertics().size(); j++)
+        {
+            int dx = allBlocks[i].getVertics()[j].first;
+            int dy = allBlocks[i].getVertics()[j].second;
+            fout << "(" << x0 + dx << "," << y0 + dy << ") ";
+        }
+        fout << DirectionToString(allBlocks[i].getDirection()) << endl;
+    }
+
+    fout.close();
+
+    // Region data write to file
+    ofstream fout1("region.txt");
+    if (!fout1.is_open())
+    {
+        cerr << "Unable to open file: region_data.txt" << endl;
+        return;
+    }
+
+    for (int i = 0; i < region_num; i++)
+    {
+        fout1 << allRegions[i].getName() << " ";
+        fout1 << "(" << allRegions[i].getX0() << "," << allRegions[i].getY0() << ") ";
+        fout1 << "(" << allRegions[i].getX1() << "," << allRegions[i].getY1() << ")" << endl;
+    }
+
+
+    
+}
+
 Direction stringToDirection(const string &str)
     {
         if (str == "N") return N;
@@ -617,4 +678,30 @@ Direction stringToDirection(const string &str)
         if (str == "FW") return FW;
         throw invalid_argument("Invalid direction string: " + str);
     }
+
+//DirectionTostring
+string DirectionToString(Direction dir)
+{
+    switch (dir)
+    {
+    case N:
+        return "N";
+    case E:
+        return "E";
+    case S:
+        return "S";
+    case W:
+        return "W";
+    case FN:
+        return "FN";
+    case FE:
+        return "FE";
+    case FS:
+        return "FS";
+    case FW:
+        return "FW";
+    default:
+        throw invalid_argument("Invalid direction");
+    }
+}
 #endif
